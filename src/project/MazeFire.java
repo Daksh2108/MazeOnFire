@@ -14,7 +14,6 @@ public class MazeFire {
 
 	public static void main(String args[]) {
 		// Ask user for dimensions
-		
 		System.out.print("Enter dimenstion size: ");
 		Scanner sc1 = new Scanner(System.in);
 		int size = sc1.nextInt();
@@ -65,7 +64,6 @@ public class MazeFire {
 		case 3:
 
 		}
-
 	}
 
 	
@@ -98,7 +96,6 @@ public class MazeFire {
 				}
 			}
 		}
-
 	}
 
 	// method to calculate if cell is filled based on probability
@@ -110,21 +107,6 @@ public class MazeFire {
 		return false;
 	}
 
-	//method to print the path
-	public static void printPath(Node goal){
-        ArrayList<String> arr = new ArrayList<>();
-		Node ptr=goal;
-
-		while(ptr!=null){
-			arr.add(ptr.row +","+ptr.col);
-			ptr=ptr.prev;
-		}
-		
-		for(int i=arr.size()-1; i>=0;i--) {
-			System.out.println(arr.get(i));
-		}
-
-	}
 	// method to print the maze
 	public static void printMaze(int size) {
 		int count1 = 0, count2 = 0;
@@ -142,13 +124,66 @@ public class MazeFire {
 			System.out.println();
 		}
 	}
+	
+	// method to solve problem 2
+	public static boolean problem2(String startPostion, String goalPostion, int size) {
+		String startToken[] = startPostion.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = Integer.parseInt(startToken[1]);
+
+		String endToken[] = goalPostion.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
+
+		fringe.push(startPostion);
+		ArrayList<String> closedSet = new ArrayList<>();
+		
+		while (!fringe.isEmpty()) {
+			String currentState = fringe.pop();
+			String currentToken[] = currentState.split(",");
+			int currentStateRow = Integer.parseInt(currentToken[0]);
+			int currentStateCol = Integer.parseInt(currentToken[1]);
+			
+			if (currentState.equals(goalPostion)) {
+				printPath(mazeArr[goalRow][goalCol]);
+				return true;
+			}
+			ArrayList<String> children = findChildren(currentState, size);
+			for(int i=0;i<children.size();i++) {
+				String getChildIndex =children.get(i);
+				String token[] = getChildIndex.split(",");
+				
+				int row3=Integer.parseInt(token[0]);
+				int col3=Integer.parseInt(token[1]);
+				if(row3 > size-1 || col3> size-1 || row3 < 0 || col3 < 0) {
+					children.remove(i);
+					i=0;
+				}
+			}
+
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex =children.get(i);
+				String token[] = getChildIndex.split(",");
+				int row = Integer.parseInt(token[0]);
+				int col = Integer.parseInt(token[1]);
+
+				if (!mazeArr[row][col].id.equals("B") && !closedSet.contains(getChildIndex)) {
+					fringe.push(getChildIndex);
+				    mazeArr[row][col].prev=mazeArr[currentStateRow][currentStateCol];
+				}
+			}
+			closedSet.add(currentState);
+		}
+		System.out.println("Path does not exist");
+		return false;
+	}
 
 	// method to find children for that cell
 	public static ArrayList<String> findChildren(String currentCell, int size) {
 		String currentToken[] = currentCell.split(",");
 		int row = Integer.parseInt(currentToken[0]);
 		int col = Integer.parseInt(currentToken[1]);
-		ArrayList children = new ArrayList<>();
+		ArrayList<String> children = new ArrayList<>();
 		/*
 		 * 0,0-> Down and Right col=0-> Right,up or Down col=size->left, up or Down
 		 * row=0->left,right or down row=size->left,right,up size,size->up or left
@@ -180,22 +215,18 @@ public class MazeFire {
 			children.add(row3 + "," + col);
 			return children;
 		}
-
 		if (row == 0) {
 			// left
 			String col2 = col - 1 + "";
 			children.add(row + "," + col2);
-
 			// right
 			String col3 = col + 1 + "";
 			children.add(row + "," + col3);
-
 			// down
 			String row2 = row + 1 + "";
 			children.add(row2 + "," + col);
 			return children;
 		}
-
 		if (row == size - 1) {
 			// left
 			String col2 = col - 1 + "";
@@ -208,7 +239,6 @@ public class MazeFire {
 			children.add(row2 + "," + col);
 			return children;
 		}
-
 		if (col == size - 1) {
 			// up
 			String row2 = row - 1 + "";
@@ -221,7 +251,6 @@ public class MazeFire {
 			children.add(row3 + "," + col);
 			return children;
 		}
-
 		// general case
 		String row2 = row + 1 + "";
 		String row3 = row - 1 + "";
@@ -233,60 +262,18 @@ public class MazeFire {
 		children.add(row + "," + col3);
 		return children;
 	}
-  
-	// method to solve problem 2
-	public static boolean problem2(String startPostion, String goalPostion, int size) {
-		String startToken[] = startPostion.split(",");
-		int startRow = Integer.parseInt(startToken[0]);
-		int startCol = Integer.parseInt(startToken[1]);
-
-		String endToken[] = goalPostion.split(",");
-		int goalRow = Integer.parseInt(endToken[0]);
-		int goalCol = Integer.parseInt(endToken[1]);
-
-		fringe.push(startPostion);
-		ArrayList<String> closedSet = new ArrayList<>();
-		
-		while (!fringe.isEmpty()) {
-			String currentState = fringe.pop();
-			String currentToken[] = currentState.split(",");
-			int currentStateRow = Integer.parseInt(currentToken[0]);
-			int currentStateCol = Integer.parseInt(currentToken[1]);
-			if (currentState.equals(goalPostion)) {
-				
-				printPath(mazeArr[goalRow][goalCol]);
-				return true;
-				
-			}
-
-			ArrayList<String> children = findChildren(currentState, size);
-			for(int i=0;i<children.size();i++) {
-				String getChildIndex =children.get(i);
-				String token[] = getChildIndex.split(",");
-				
-				int row3=Integer.parseInt(token[0]);
-				int col3=Integer.parseInt(token[1]);
-				if(row3 > size-1 || col3> size-1 || row3 < 0 || col3 < 0) {
-					children.remove(i);
-					i=0;
-				}
-			}
-
-			for (int i = 0; i < children.size(); i++) {
-				String getChildIndex =children.get(i);
-				String token[] = getChildIndex.split(",");
-
-				int row = Integer.parseInt(token[0]);
-				int col = Integer.parseInt(token[1]);
-
-				if (!mazeArr[row][col].id.equals("B") && !closedSet.contains(getChildIndex)) {
-					fringe.push(getChildIndex);
-				    mazeArr[row][col].prev=mazeArr[currentStateRow][currentStateCol];
-				}
-
-			}
-			closedSet.add(currentState);
+	
+	//method to print the path
+	public static void printPath(Node goal){
+        ArrayList<String> arr = new ArrayList<>();
+		Node ptr=goal;
+		while(ptr!=null){
+			arr.add(ptr.row +","+ptr.col);
+			ptr=ptr.prev;
 		}
-		return false;
+		System.out.println("Path:");
+		for(int i=arr.size()-1; i>=0;i--) {
+			System.out.println(arr.get(i));
+		}
 	}
 }
