@@ -3,6 +3,8 @@ package project;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class MazeFire {
 
@@ -11,6 +13,8 @@ public class MazeFire {
 
 	// Stack for keeping track of shortest path
 	public static Stack<String> fringe = new Stack<>();
+	//public static Queue<String> fringeBFS = new Queue<>();
+	public static Queue<String> fringeBFS = new PriorityQueue<>();
 
 	public static void main(String args[]) {
 		// Ask user for dimensions
@@ -41,31 +45,46 @@ public class MazeFire {
 //		mazeArr[3][2].id="_";
 //		mazeArr[3][3].id="_";
 
-		System.out.println("Enter 1 for Problem 1");
-		System.out.println("Enter 2 for Problem 2");
-		System.out.println("Enter 3 for Problem 3");
-		System.out.println("Enter 4 for Problem 4");
-		Scanner sc3 = new Scanner(System.in);
-		int menu = sc3.nextInt();
-		switch (menu) {
-		case 1:
-			printMaze(size);
-			break;
-		case 2:
-			printMaze(size);
-			System.out.print("Enter starting position (row by col) comma separated: ");
-			Scanner sc4 = new Scanner(System.in);
-			String startPosition = sc4.nextLine().replaceAll("\\s", "");
-			System.out.print("Enter goal position (row by col) comma separated: ");
-			Scanner sc5 = new Scanner(System.in);
-			String goalPosition = sc5.nextLine().replaceAll("\\s", "");
-			problem2(startPosition, goalPosition, size);
-			break;
-		case 3:
+		while(true){
+			System.out.println("Enter 1 for Problem 1");
+			System.out.println("Enter 2 for Problem 2");
+			System.out.println("Enter 3 for Problem 3");
+			System.out.println("Enter 4 for Problem 4");
+			System.out.println("Enter 9 to Quit");
+			Scanner sc3 = new Scanner(System.in);
+			int menu = sc3.nextInt();
+			switch (menu) {
+				case 1:
+					printMaze(size);
+					break;
+				case 2:
+					printMaze(size);
+					System.out.print("Enter starting position (row by col) comma separated: ");
+					Scanner sc4 = new Scanner(System.in);
+					String startPosition = sc4.nextLine().replaceAll("\\s", "");
+					System.out.print("Enter goal position (row by col) comma separated: ");
+					Scanner sc5 = new Scanner(System.in);
+					String goalPosition = sc5.nextLine().replaceAll("\\s", "");
+					problem2(startPosition, goalPosition, size);
+					break;
+				case 3:
+					printMaze(size);
+					System.out.print("Enter starting position (row by col) comma separated: ");
+					Scanner sc6 = new Scanner(System.in);
+					String startPositionBFS = sc6.nextLine().replaceAll("\\s", "");
+					System.out.print("Enter goal position (row by col) comma separated: ");
+					Scanner sc7 = new Scanner(System.in);
+					String goalPositionBFS = sc7.nextLine().replaceAll("\\s", "");
+					problem3(startPositionBFS, goalPositionBFS, size);
+					break;
+					
+				case 9:
+					System.out.println("Program ended");
+					System.exit(0);
 
+			}
 		}
 	}
-
 	
 	// method to construct maze with blocks
 	public static void mazeGenerator(int size, double prob) {
@@ -275,5 +294,57 @@ public class MazeFire {
 		for(int i=arr.size()-1; i>=0;i--) {
 			System.out.println(arr.get(i));
 		}
+	}
+	// method to solve problem 3
+	public static boolean problem3(String startPostion, String goalPostion, int size) {
+		String startToken[] = startPostion.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = Integer.parseInt(startToken[1]);
+
+		String endToken[] = goalPostion.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
+		
+		fringeBFS.add(startPostion);
+		ArrayList<String> closedSet = new ArrayList<>();
+		
+		while (!fringeBFS.isEmpty()) {
+			String currentState = fringeBFS.remove();
+			String currentToken[] = currentState.split(",");
+			int currentStateRow = Integer.parseInt(currentToken[0]);
+			int currentStateCol = Integer.parseInt(currentToken[1]);
+			
+			if (currentState.equals(goalPostion)) {
+				printPath(mazeArr[goalRow][goalCol]);
+				return true;
+			}
+			ArrayList<String> children = findChildren(currentState, size);
+			for(int i=0;i<children.size();i++) {
+				String getChildIndex =children.get(i);
+				String token[] = getChildIndex.split(",");
+				
+				int row3=Integer.parseInt(token[0]);
+				int col3=Integer.parseInt(token[1]);
+				if(row3 > size-1 || col3> size-1 || row3 < 0 || col3 < 0) {
+					children.remove(i);
+					i=0;
+				}
+			}
+
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex =children.get(i);
+				String token[] = getChildIndex.split(",");
+				int row = Integer.parseInt(token[0]);
+				int col = Integer.parseInt(token[1]);
+
+				if (!mazeArr[row][col].id.equals("B") && !closedSet.contains(getChildIndex)) {
+					fringeBFS.add(getChildIndex);
+				    mazeArr[row][col].prev=mazeArr[currentStateRow][currentStateCol];
+				}
+			}
+			closedSet.add(currentState);
+		}
+		System.out.println("Path does not exist");
+		return false;
 	}
 }
