@@ -13,7 +13,7 @@ public class MazeFire {
 
 	// Stack for keeping track of shortest path
 	public static Stack<String> fringe = new Stack<>();
-	//public static Queue<String> fringeBFS = new Queue<>();
+	// public static Queue<String> fringeBFS = new Queue<>();
 	public static Queue<String> fringeBFS = new PriorityQueue<>();
 
 	public static void main(String args[]) {
@@ -45,7 +45,7 @@ public class MazeFire {
 //		mazeArr[3][2].id="_";
 //		mazeArr[3][3].id="_";
 
-		while(true){
+		while (true) {
 			System.out.println("Enter 1 for Problem 1");
 			System.out.println("Enter 2 for Problem 2");
 			System.out.println("Enter 3 for Problem 3");
@@ -54,45 +54,62 @@ public class MazeFire {
 			Scanner sc3 = new Scanner(System.in);
 			int menu = sc3.nextInt();
 			switch (menu) {
-				case 1:
-					printMaze(size);
-					break;
-				case 2:
-					printMaze(size);
-					System.out.print("Enter starting position (row by col) comma separated: ");
-					Scanner sc4 = new Scanner(System.in);
-					String startPosition = sc4.nextLine().replaceAll("\\s", "");
-					System.out.print("Enter goal position (row by col) comma separated: ");
-					Scanner sc5 = new Scanner(System.in);
-					String goalPosition = sc5.nextLine().replaceAll("\\s", "");
-					problem2(startPosition, goalPosition, size);
-					break;
-				case 3:
-					printMaze(size);
-					System.out.print("Enter starting position (row by col) comma separated: ");
-					Scanner sc6 = new Scanner(System.in);
-					String startPositionBFS = sc6.nextLine().replaceAll("\\s", "");
-					System.out.print("Enter goal position (row by col) comma separated: ");
-					Scanner sc7 = new Scanner(System.in);
-					String goalPositionBFS = sc7.nextLine().replaceAll("\\s", "");
-					problem3(startPositionBFS, goalPositionBFS, size);
-					break;
-					
-				case 9:
-					System.out.println("Program ended");
-					System.exit(0);
+			case 1:
+				printMaze(size);
+				break;
+			case 2:
+				printMaze(size);
+				System.out.print("Enter starting position (row by col) comma separated: ");
+				Scanner sc4 = new Scanner(System.in);
+				String startPosition = sc4.nextLine().replaceAll("\\s", "");
+				System.out.print("Enter goal position (row by col) comma separated: ");
+				Scanner sc5 = new Scanner(System.in);
+				String goalPosition = sc5.nextLine().replaceAll("\\s", "");
+				updateMazeGenerator(startPosition, goalPosition);
+				printMaze(size);
+				problem2(startPosition, goalPosition, size);
+				break;
+			case 3:
+				printMaze(size);
+				System.out.print("Enter starting position (row by col) comma separated: ");
+				Scanner sc6 = new Scanner(System.in);
+				String startPositionBFS = sc6.nextLine().replaceAll("\\s", "");
+				System.out.print("Enter goal position (row by col) comma separated: ");
+				Scanner sc7 = new Scanner(System.in);
+				String goalPositionBFS = sc7.nextLine().replaceAll("\\s", "");
+				updateMazeGenerator(startPositionBFS, goalPositionBFS);
+				printMaze(size);
+				problem3(startPositionBFS, goalPositionBFS, size);
+				break;
+
+			case 9:
+				System.out.println("Program ended");
+				System.exit(0);
 
 			}
 		}
 	}
-	
+
+	// method to update startPostion and goalPostion
+
+	public static void updateMazeGenerator(String StartPosition, String goalPostion) {
+		String num1[] = StartPosition.split(",");
+		int startX = Integer.parseInt(num1[0]);
+		int startY = Integer.parseInt(num1[1]);
+		mazeArr[startX][startY].id = "S";
+		String num2[] = goalPostion.split(",");
+		int goalX = Integer.parseInt(num2[0]);
+		int goalY = Integer.parseInt(num2[1]);
+		mazeArr[goalX][goalY].id = "G";
+	}
+
 	// method to construct maze with blocks
 	public static void mazeGenerator(int size, double prob) {
 		mazeArr = new Node[size][size];
-		
-		for(int i=0;i<mazeArr.length;i++) {
-			for(int j=0;j<mazeArr.length;j++) {
-				mazeArr[i][j]=new Node("", null,i,j);
+
+		for (int i = 0; i < mazeArr.length; i++) {
+			for (int j = 0; j < mazeArr.length; j++) {
+				mazeArr[i][j] = new Node("", null, i, j);
 			}
 		}
 		for (int i = 0; i < size; i++) {
@@ -104,12 +121,12 @@ public class MazeFire {
 				}
 				// making last cell empty
 				if (i == size - 1 && j == size - 1) {
-					mazeArr[i][j].id="_";
+					mazeArr[i][j].id = "_";
 					break;
 				}
 				boolean filled = probability(prob);
 				if (filled) {
-					mazeArr[i][j].id= "B";
+					mazeArr[i][j].id = "B";
 				} else {
 					mazeArr[i][j].id = "_";
 				}
@@ -143,52 +160,52 @@ public class MazeFire {
 			System.out.println();
 		}
 	}
-	
+
 	// method to solve problem 2
-	public static boolean problem2(String startPostion, String goalPostion, int size) {
-		String startToken[] = startPostion.split(",");
+	public static boolean problem2(String startPosition, String goalPosition, int size) {
+		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
 		int startCol = Integer.parseInt(startToken[1]);
 
-		String endToken[] = goalPostion.split(",");
+		String endToken[] = goalPosition.split(",");
 		int goalRow = Integer.parseInt(endToken[0]);
 		int goalCol = Integer.parseInt(endToken[1]);
 
-		fringe.push(startPostion);
+		fringe.push(startPosition);
 		ArrayList<String> closedSet = new ArrayList<>();
-		
+
 		while (!fringe.isEmpty()) {
 			String currentState = fringe.pop();
 			String currentToken[] = currentState.split(",");
 			int currentStateRow = Integer.parseInt(currentToken[0]);
 			int currentStateCol = Integer.parseInt(currentToken[1]);
-			
-			if (currentState.equals(goalPostion)) {
+
+			if (currentState.equals(goalPosition)) {
 				printPath(mazeArr[goalRow][goalCol]);
 				return true;
 			}
 			ArrayList<String> children = findChildren(currentState, size);
-			for(int i=0;i<children.size();i++) {
-				String getChildIndex =children.get(i);
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex = children.get(i);
 				String token[] = getChildIndex.split(",");
-				
-				int row3=Integer.parseInt(token[0]);
-				int col3=Integer.parseInt(token[1]);
-				if(row3 > size-1 || col3> size-1 || row3 < 0 || col3 < 0) {
+
+				int row3 = Integer.parseInt(token[0]);
+				int col3 = Integer.parseInt(token[1]);
+				if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0) {
 					children.remove(i);
-					i=0;
+					i = 0;
 				}
 			}
 
 			for (int i = 0; i < children.size(); i++) {
-				String getChildIndex =children.get(i);
+				String getChildIndex = children.get(i);
 				String token[] = getChildIndex.split(",");
 				int row = Integer.parseInt(token[0]);
 				int col = Integer.parseInt(token[1]);
 
 				if (!mazeArr[row][col].id.equals("B") && !closedSet.contains(getChildIndex)) {
 					fringe.push(getChildIndex);
-				    mazeArr[row][col].prev=mazeArr[currentStateRow][currentStateCol];
+					mazeArr[row][col].prev = mazeArr[currentStateRow][currentStateCol];
 				}
 			}
 			closedSet.add(currentState);
@@ -224,7 +241,7 @@ public class MazeFire {
 		}
 		if (col == 0) {
 			// right
-			String col2=col+1+"";
+			String col2 = col + 1 + "";
 			children.add(row + "," + col2);
 			// up
 			String row2 = row - 1 + "";
@@ -281,65 +298,66 @@ public class MazeFire {
 		children.add(row + "," + col3);
 		return children;
 	}
-	
-	//method to print the path
-	public static void printPath(Node goal){
-        ArrayList<String> arr = new ArrayList<>();
-		Node ptr=goal;
-		while(ptr!=null){
-			arr.add(ptr.row +","+ptr.col);
-			ptr=ptr.prev;
+
+	// method to print the path
+	public static void printPath(Node goal) {
+		ArrayList<String> arr = new ArrayList<>();
+		Node ptr = goal;
+		while (ptr != null) {
+			arr.add(ptr.row + "," + ptr.col);
+			ptr = ptr.prev;
 		}
 		System.out.println("Path:");
-		for(int i=arr.size()-1; i>=0;i--) {
+		for (int i = arr.size() - 1; i >= 0; i--) {
 			System.out.println(arr.get(i));
 		}
 	}
+
 	// method to solve problem 3
-	public static boolean problem3(String startPostion, String goalPostion, int size) {
-		String startToken[] = startPostion.split(",");
+	public static boolean problem3(String startPosition, String goalPosition, int size) {
+		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
 		int startCol = Integer.parseInt(startToken[1]);
 
-		String endToken[] = goalPostion.split(",");
+		String endToken[] = goalPosition.split(",");
 		int goalRow = Integer.parseInt(endToken[0]);
 		int goalCol = Integer.parseInt(endToken[1]);
-		
-		fringeBFS.add(startPostion);
+
+		fringeBFS.add(startPosition);
 		ArrayList<String> closedSet = new ArrayList<>();
-		
+
 		while (!fringeBFS.isEmpty()) {
 			String currentState = fringeBFS.remove();
 			String currentToken[] = currentState.split(",");
 			int currentStateRow = Integer.parseInt(currentToken[0]);
 			int currentStateCol = Integer.parseInt(currentToken[1]);
-			
-			if (currentState.equals(goalPostion)) {
+
+			if (currentState.equals(goalPosition)) {
 				printPath(mazeArr[goalRow][goalCol]);
 				return true;
 			}
 			ArrayList<String> children = findChildren(currentState, size);
-			for(int i=0;i<children.size();i++) {
-				String getChildIndex =children.get(i);
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex = children.get(i);
 				String token[] = getChildIndex.split(",");
-				
-				int row3=Integer.parseInt(token[0]);
-				int col3=Integer.parseInt(token[1]);
-				if(row3 > size-1 || col3> size-1 || row3 < 0 || col3 < 0) {
+
+				int row3 = Integer.parseInt(token[0]);
+				int col3 = Integer.parseInt(token[1]);
+				if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0) {
 					children.remove(i);
-					i=0;
+					i = 0;
 				}
 			}
 
 			for (int i = 0; i < children.size(); i++) {
-				String getChildIndex =children.get(i);
+				String getChildIndex = children.get(i);
 				String token[] = getChildIndex.split(",");
 				int row = Integer.parseInt(token[0]);
 				int col = Integer.parseInt(token[1]);
 
 				if (!mazeArr[row][col].id.equals("B") && !closedSet.contains(getChildIndex)) {
 					fringeBFS.add(getChildIndex);
-				    mazeArr[row][col].prev=mazeArr[currentStateRow][currentStateCol];
+					mazeArr[row][col].prev = mazeArr[currentStateRow][currentStateCol];
 				}
 			}
 			closedSet.add(currentState);
