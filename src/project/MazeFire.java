@@ -68,6 +68,7 @@ public class MazeFire {
 				updateMazeGenerator(startPosition, goalPosition);
 				printMaze(size);
 				problem2(startPosition, goalPosition, size);
+				clearMazeGenerator(startPosition,goalPosition);
 				break;
 			case 3:
 				printMaze(size);
@@ -80,6 +81,7 @@ public class MazeFire {
 				updateMazeGenerator(startPositionBFS, goalPositionBFS);
 				printMaze(size);
 				problem3(startPositionBFS, goalPositionBFS, size);
+				clearMazeGenerator(startPositionBFS,goalPositionBFS);
 				break;
 
 			case 9:
@@ -91,7 +93,18 @@ public class MazeFire {
 	}
 
 	// method to update startPostion and goalPostion
-
+		public static void clearMazeGenerator(String StartPosition, String goalPostion) {
+			String num1[] = StartPosition.split(",");
+			int startX = Integer.parseInt(num1[0]);
+			int startY = Integer.parseInt(num1[1]);
+			mazeArr[startX][startY].id = "_";
+			String num2[] = goalPostion.split(",");
+			int goalX = Integer.parseInt(num2[0]);
+			int goalY = Integer.parseInt(num2[1]);
+			mazeArr[goalX][goalY].id = "_";
+			
+		}
+	// method to update startPostion and goalPostion
 	public static void updateMazeGenerator(String StartPosition, String goalPostion) {
 		String num1[] = StartPosition.split(",");
 		int startX = Integer.parseInt(num1[0]);
@@ -304,10 +317,10 @@ public class MazeFire {
 		ArrayList<String> arr = new ArrayList<>();
 		Node ptr = goal;
 		while (ptr != null) {
-			arr.add(ptr.row + "," + ptr.col);
+			arr.add("("+ptr.row + "," + ptr.col+")");
 			ptr = ptr.prev;
 		}
-		System.out.println("Path:");
+		System.out.println("Path:(row,col)");
 		for (int i = arr.size() - 1; i >= 0; i--) {
 			System.out.println(arr.get(i));
 		}
