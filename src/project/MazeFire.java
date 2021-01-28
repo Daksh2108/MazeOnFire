@@ -92,7 +92,7 @@ public class MazeFire {
 		}
 	}
 
-	// method to update startPostion and goalPostion
+	// method to clear startPostion and goalPostion
 		public static void clearMazeGenerator(String StartPosition, String goalPostion) {
 			String num1[] = StartPosition.split(",");
 			int startX = Integer.parseInt(num1[0]);
@@ -313,6 +313,7 @@ public class MazeFire {
 	}
 
 	// method to print the path
+	
 	public static void printPath(Node goal) {
 		ArrayList<String> arr = new ArrayList<>();
 		Node ptr = goal;
