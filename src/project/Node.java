@@ -5,8 +5,8 @@ public class Node {
 	 Node prev=null;
 	 int row=0;
 	 int col=0;
-	 double distance=0.0f;
-	 double eucliDistance=0.0f;
+	 double distance=0.0;
+	 double eucliDistance=0.0;
 	
 	public Node(String id, Node prev,int row, int col,double distance,double eucliDistance) {
 		this.id=id;

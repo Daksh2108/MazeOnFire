@@ -2,10 +2,13 @@ package project;
 
 import java.util.Scanner;
 import java.util.Stack;
+
+
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Comparator;
+import java.lang.Math;
 
 public class MazeFire{
 	public static final double inf = Double.POSITIVE_INFINITY;
@@ -14,10 +17,22 @@ public class MazeFire{
 
 	// Stack for keeping track of shortest path
 	public static Stack<String> fringe = new Stack<>();
-	// public static Queue<String> fringeBFS = new Queue<>();
 	public static Queue<String> fringeBFS = new PriorityQueue<>();
-	public static Comparator<String> distanceComparator;
-	public static PriorityQueue<String> fringeA = new PriorityQueue<>(distanceComparator);
+	public static PriorityQueue<String> fringeA = new PriorityQueue<>(new Comparator<String>(){
+		public int compare(String s1, String s2){
+			String distance1 = s1.substring(s1.indexOf("|")+1);
+			String distance2 = s2.substring(s2.indexOf("|")+1);
+			double distance1Num =Double.parseDouble(distance1);
+			double distance2Num =Double.parseDouble(distance2);
+			if(distance1Num < distance2Num){
+				return -1;
+			}
+			if(distance1Num > distance2Num){
+				return 1;
+			}
+			return 0;
+		}
+	});
     
 
 
@@ -31,24 +46,27 @@ public class MazeFire{
 		System.out.print("Enter probability cell is filled: ");
 		Scanner sc2 = new Scanner(System.in);
 		double prob = sc2.nextDouble();
-
 		mazeGenerator(size, prob);
-//		mazeArr[0][0].id="_";
-//		mazeArr[0][1].id="B";
-//		mazeArr[0][2].id="_";
-//		mazeArr[0][3].id="B";
-//		mazeArr[1][0].id="B";
-//		mazeArr[1][1].id="B";
-//		mazeArr[1][2].id="B";
-//		mazeArr[1][3].id="B";
-//		mazeArr[2][0].id="_";
-//		mazeArr[2][1].id="B";
-//		mazeArr[2][2].id="_";
-//		mazeArr[2][3].id="_";
-//		mazeArr[3][0].id="_";
-//		mazeArr[3][1].id="B";
-//		mazeArr[3][2].id="_";
-//		mazeArr[3][3].id="_";
+		updateMazeGenerator(size);
+		printMaze(size);
+		
+		
+// 		mazeArr[0][0].id="S";
+//      mazeArr[0][1].id="_";
+// 		mazeArr[0][2].id="B";
+// 		mazeArr[0][3].id="_";
+// 		mazeArr[1][0].id="B";
+// 		mazeArr[1][1].id="_";
+// 		mazeArr[1][2].id="_";
+// 		mazeArr[1][3].id="";
+// 		mazeArr[2][0].id="_";
+// 		mazeArr[2][1].id="_";
+// 		mazeArr[2][2].id="G";
+// 		mazeArr[2][3].id="_";
+// 		mazeArr[3][0].id="_";
+// 		mazeArr[3][1].id="B";
+// 		mazeArr[3][2].id="_";
+// 		mazeArr[3][3].id="_";
 
 		while (true) {
 			System.out.println("Enter 1 for Problem 1");
@@ -58,22 +76,15 @@ public class MazeFire{
 			System.out.println("Enter 9 to Quit");
 			Scanner sc3 = new Scanner(System.in);
 			int menu = sc3.nextInt();
+			String startPosition = "0,0";
+			String goalPosition = (size-1) + "," + (size-1);
 			switch (menu) {
 			case 1:
 				printMaze(size);
 				break;
 			case 2:
 				printMaze(size);
-				System.out.print("Enter starting position (row by col) comma separated: ");
-				Scanner sc4 = new Scanner(System.in);
-				String startPosition = sc4.nextLine().replaceAll("\\s", "");
-				System.out.print("Enter goal position (row by col) comma separated: ");
-				Scanner sc5 = new Scanner(System.in);
-				String goalPosition = sc5.nextLine().replaceAll("\\s", "");
-				updateMazeGenerator(startPosition, goalPosition);
-				printMaze(size);
 				problem2(startPosition, goalPosition, size);
-				clearMazeGenerator(startPosition,goalPosition);
 				break;
 			case 3:
 				System.out.println("Enter 1 for BFS and 2 for A*");
@@ -81,28 +92,10 @@ public class MazeFire{
 				String checkAlgo=sc6.nextLine();
 				printMaze(size);
 				if(checkAlgo.equals("1")){
-					System.out.print("Enter starting position (row by col) comma separated: ");
-					Scanner sc7 = new Scanner(System.in);
-					String startPositionBFS = sc7.nextLine().replaceAll("\\s", "");
-					System.out.print("Enter goal position (row by col) comma separated: ");
-					Scanner sc8 = new Scanner(System.in);
-					String goalPositionBFS = sc8.nextLine().replaceAll("\\s", "");
-					updateMazeGenerator(startPositionBFS, goalPositionBFS);
-					printMaze(size);
-					problem3BFS(startPositionBFS, goalPositionBFS, size);
-					clearMazeGenerator(startPositionBFS,goalPositionBFS);
+					problem3BFS(startPosition, goalPosition, size);	
 				}
 				if(checkAlgo.equals("2")){
-					System.out.print("Enter starting position (row by col) comma separated: ");
-					Scanner sc9 = new Scanner(System.in);
-					String startPositionA = sc9.nextLine().replaceAll("\\s", "");
-					System.out.print("Enter goal position (row by col) comma separated: ");
-					Scanner sc10 = new Scanner(System.in);
-					String goalPositionA = sc10.nextLine().replaceAll("\\s", "");
-					updateMazeGenerator(startPositionA, goalPositionA);
-					printMaze(size);
-					//problem3A(startPositionA,goalPositionA, size);
-					//clearMazeGenerator(startPositionA,goalPositionA);
+					problem3A(startPosition,goalPosition, size);
 				}
 				break;
 
@@ -114,28 +107,10 @@ public class MazeFire{
 		}
 	}
 
-	// method to clear startPostion and goalPostion
-		public static void clearMazeGenerator(String StartPosition, String goalPostion) {
-			String num1[] = StartPosition.split(",");
-			int startX = Integer.parseInt(num1[0]);
-			int startY = Integer.parseInt(num1[1]);
-			mazeArr[startX][startY].id = "_";
-			String num2[] = goalPostion.split(",");
-			int goalX = Integer.parseInt(num2[0]);
-			int goalY = Integer.parseInt(num2[1]);
-			mazeArr[goalX][goalY].id = "_";
-			
-		}
 	// method to update startPostion and goalPostion
-	public static void updateMazeGenerator(String StartPosition, String goalPostion) {
-		String num1[] = StartPosition.split(",");
-		int startX = Integer.parseInt(num1[0]);
-		int startY = Integer.parseInt(num1[1]);
-		mazeArr[startX][startY].id = "S";
-		String num2[] = goalPostion.split(",");
-		int goalX = Integer.parseInt(num2[0]);
-		int goalY = Integer.parseInt(num2[1]);
-		mazeArr[goalX][goalY].id = "G";
+	public static void updateMazeGenerator(int size) {
+		mazeArr[0][0].id = "S";
+		mazeArr[size-1][size-1].id = "G";
 	}
 
 	// method to construct maze with blocks
@@ -253,7 +228,13 @@ public class MazeFire{
 	public static ArrayList<String> findChildren(String currentCell, int size) {
 		String currentToken[] = currentCell.split(",");
 		int row = Integer.parseInt(currentToken[0]);
-		int col = Integer.parseInt(currentToken[1]);
+		int col = 0;
+		if(currentToken[1].indexOf("|") == -1){
+			col = Integer.parseInt(currentToken[1]);
+		}else{
+			col = Integer.parseInt(currentToken[1].substring(0,currentToken[1].indexOf("|")));
+		}
+		
 		ArrayList<String> children = new ArrayList<>();
 		/*
 		 * 0,0-> Down and Right col=0-> Right,up or Down col=size->left, up or Down
@@ -402,16 +383,6 @@ public class MazeFire{
 		//return;
 	}
 	public static void problem3A(String startPositionA, String goalPositionA,int size){
-		distanceComparator = new Comparator<String>() {
-			@Override
-			public int compare(String s1, String s2) {
-				String distance1 = s1.substring(s1.indexOf("|")+1);
-				String distance2 = s2.substring(s2.indexOf("|")+1);
-				int distance1Num =Integer.parseInt(distance1);
-				int distance2Num =Integer.parseInt(distance2);
-				return distance1Num - distance2Num;
-			}
-		};
 		ArrayList<String> closedSet = new ArrayList<>();
 		String startToken[] = startPositionA.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
@@ -428,11 +399,21 @@ public class MazeFire{
 			}
 		}
         
+		
 		mazeArr[startRow][startCol].distance = 0;
 		fringeA.add(startPositionA + "|" + mazeArr[startRow][startCol].distance);
 		//removed prev[root] = root
 		while(!fringeA.isEmpty()){
-			String currentState = fringeA.remove();
+			Object[] arr=fringeA.toArray();
+			
+			for(int i=0;i<arr.length;i++) {
+				System.out.println(arr[i]+"");
+			}
+			String currentState = fringeA.poll();
+			String currentToken[] = currentState.split(",");
+			int currentRow = Integer.parseInt(currentToken[0]);
+			int currentCol = Integer.parseInt(currentToken[1].substring(0,currentToken[1].indexOf("|")));
+
 			if(!closedSet.contains(currentState)){
 				ArrayList<String> children = findChildren(currentState, size);
 				for (int i = 0; i < children.size(); i++) {
@@ -451,35 +432,45 @@ public class MazeFire{
 					String getChildIndex = children.get(i);
 					String token[] = getChildIndex.split(",");
 					int row = Integer.parseInt(token[0]);
-					int col = Integer.parseInt(token[1]);
-					int d = Integer.parseInt(currentState.substring(currentState.indexOf("|")+1));
-					int estimation = 
+					int col=0;
+					if(token[1].indexOf("|") == -1){
+						col = Integer.parseInt(token[1]);
+					}else{
+						col = Integer.parseInt(token[1].substring(0,token[1].indexOf("|")));
+					}
+					double d = mazeArr[currentRow][currentCol].distance;
+					double estimation = euclidean(getChildIndex,goalPositionA);
 
-					
-
+					if(d + 1 + estimation < mazeArr[row][col].distance){
+						mazeArr[row][col].distance = d + 1;
+						fringeA.add(row + "," + col + "|" + (mazeArr[row][col].distance + estimation));
+						mazeArr[row][col].prev = mazeArr[currentRow][currentCol];
+					}
 				}
-
+				closedSet.add(currentState);
 			}
 		}
-
-
-		
-
-
-
-
-
-
+		if(mazeArr[goalRow][goalCol].prev == null){
+			System.out.println("Path does not exist");
+			return;
+		}
+		printPath(mazeArr[goalRow][goalCol]);
 	}
 
-	public static int euclidean(String currentState, String goalState){
+	public static double euclidean(String currentState, String goalState){
+		String startToken[] = currentState.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = 0;
+		if(startToken[1].indexOf("|") == -1){
+			startCol = Integer.parseInt(startToken[1]);
+		}else{
+			startCol = Integer.parseInt(startToken[1].substring(0,startToken[1].indexOf("|")));
+		}
 
-    
+		String endToken[] = goalState.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
 
-
-
-
-		return 0;
-
+		return Math.sqrt(((goalCol-startCol)*(goalCol-startCol)) + ((goalRow-startRow)*(goalRow-startRow)));
 	}
 }
