@@ -9,6 +9,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Comparator;
 import java.lang.Math;
+import java.util.Random;
 
 public class MazeFire{
 	public static final double inf = Double.POSITIVE_INFINITY;
@@ -69,10 +70,12 @@ public class MazeFire{
 // 		mazeArr[3][3].id="_";
 
 		while (true) {
+			clearFire(size);
 			System.out.println("Enter 1 for Problem 1");
 			System.out.println("Enter 2 for Problem 2");
 			System.out.println("Enter 3 for Problem 3");
 			System.out.println("Enter 4 for Problem 4");
+			System.out.println("Enter 5 for Strategy 1 in fire maze");
 			System.out.println("Enter 9 to Quit");
 			Scanner sc3 = new Scanner(System.in);
 			int menu = sc3.nextInt();
@@ -88,8 +91,8 @@ public class MazeFire{
 				break;
 			case 3:
 				System.out.println("Enter 1 for BFS and 2 for A*");
-				Scanner sc6 = new Scanner(System.in);
-				String checkAlgo=sc6.nextLine();
+				Scanner sc4 = new Scanner(System.in);
+				String checkAlgo=sc4.nextLine();
 				printMaze(size);
 				if(checkAlgo.equals("1")){
 					problem3BFS(startPosition, goalPosition, size);	
@@ -97,6 +100,16 @@ public class MazeFire{
 				if(checkAlgo.equals("2")){
 					problem3A(startPosition,goalPosition, size);
 				}
+				break;
+			case 4:
+				break;
+			case 5:
+				System.out.println("Enter a q value for the fire");
+				Scanner sc5 = new Scanner(System.in);
+				Double q = sc5.nextDouble();
+				fireGenerator(size);
+				System.out.println("Fire started (labeled F)");
+				printMaze(size);
 				break;
 
 			case 9:
@@ -152,7 +165,81 @@ public class MazeFire{
 		}
 		return false;
 	}
+	
+	//method to add fire to the maze
+	public static void fireGenerator(int size) {
+		int i = (int)(Math.random() * size);
+		int j = (int)(Math.random() * size);
+		while(mazeArr[i][j].equals("S") || mazeArr[i][j].id.equals("G") || mazeArr[i][j].equals("B") 
+				|| (i == 0 && j == 0) || (i == size-1 && j == size-1)) {
+			i = (int)(Math.random() * size);
+			j = (int)(Math.random() * size);
+		}
+		mazeArr[i][j].id = "F";
+	}
+	
+	//method to advance fire
+	public static void advanceFire(int q) {
+		Node[][] copy = mazeArr;
+		for(int i=0; i<mazeArr.length; i++) {
+			for(int j=0; j<mazeArr.length; j++) {
+				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].equals("B")) {
+					//check how many neighbors are on fire
+					int k = neighborFireCheck(i,j,mazeArr.length);
+					double prob = 1 - (Math.pow(1-q, k));
+					if(Math.random() <= prob) {
+						copy[i][j].id = "F";
+					}
+				}
+			}
+		}
+		//set mazeArr equal to copy
+		for(int i=0; i<mazeArr.length; i++) {
+			for(int j=0; j<mazeArr.length; j++) {
+				mazeArr[i][j].id = copy[i][j].id;
+			}
+		}
+	}
+	//method to check number of neighbors on fire
+	public static int neighborFireCheck(int row, int col, int size) {
+		String currentState = row + "," + col; 
+		ArrayList<String> children = findChildren(currentState, size);
+		//filter out the out of bounds children
+		for (int i = 0; i < children.size(); i++) {
+			String getChildIndex = children.get(i);
+			String token[] = getChildIndex.split(",");
 
+			int row3 = Integer.parseInt(token[0]);
+			int col3 = Integer.parseInt(token[1]);
+			if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0) {
+				children.remove(i);
+				i = 0;
+			}
+		}
+		int count = 0;
+		//count number of children on fire
+		for(int i=0; i<children.size(); i++) {
+			String token[] = children.get(i).split(",");
+			int childRow = Integer.parseInt(token[0]);
+			int childCol = Integer.parseInt(token[1]);
+			if(mazeArr[childRow][childCol].id.equals("F")) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	//method to clear the fire
+	public static void clearFire(int size) {
+		for(int i=0; i<size; i++) {
+			for(int j=0; j<size; j++) {
+				if(mazeArr[i][j].id.equals("F")) {
+					mazeArr[i][j].id = "_";
+				}
+			}
+		}
+	}
+	
 	// method to print the maze
 	public static void printMaze(int size) {
 		int count1 = 0, count2 = 0;
@@ -473,4 +560,11 @@ public class MazeFire{
 
 		return Math.sqrt(((goalCol-startCol)*(goalCol-startCol)) + ((goalRow-startRow)*(goalRow-startRow)));
 	}
+	
+	public static void strategy1(String startPosition, String goalPosition) {
+		//compute the shortest path and follow it until agent is trapped and burns or makes his way out
+		//move print maze into case statements because fire maze will need to add fire before it prints the maze(in the main method, in the beginning)
+		
+	}
+	
 }
