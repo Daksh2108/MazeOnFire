@@ -490,11 +490,6 @@ public class MazeFire{
 		fringeA.add(startPositionA + "|" + mazeArr[startRow][startCol].distance);
 		//removed prev[root] = root
 		while(!fringeA.isEmpty()){
-			Object[] arr=fringeA.toArray();
-			
-			for(int i=0;i<arr.length;i++) {
-				System.out.println(arr[i]+"");
-			}
 			String currentState = fringeA.poll();
 			String currentToken[] = currentState.split(",");
 			int currentRow = Integer.parseInt(currentToken[0]);
