@@ -52,22 +52,117 @@ public class MazeFire{
 		printMaze(size);
 		
 		
-// 		mazeArr[0][0].id="S";
-//      mazeArr[0][1].id="_";
-// 		mazeArr[0][2].id="B";
-// 		mazeArr[0][3].id="_";
-// 		mazeArr[1][0].id="B";
-// 		mazeArr[1][1].id="_";
-// 		mazeArr[1][2].id="_";
-// 		mazeArr[1][3].id="";
-// 		mazeArr[2][0].id="_";
-// 		mazeArr[2][1].id="_";
-// 		mazeArr[2][2].id="G";
-// 		mazeArr[2][3].id="_";
-// 		mazeArr[3][0].id="_";
-// 		mazeArr[3][1].id="B";
-// 		mazeArr[3][2].id="_";
-// 		mazeArr[3][3].id="_";
+		mazeArr[0][0].id="S";
+        mazeArr[0][1].id="_";
+ 		mazeArr[0][2].id="-";
+		mazeArr[0][3].id="_";
+		mazeArr[0][4].id="_";
+        mazeArr[0][5].id="B";
+ 		mazeArr[0][6].id="_";
+		mazeArr[0][7].id="_";
+		mazeArr[0][8].id="B";
+		mazeArr[0][9].id="_";
+		 
+ 		mazeArr[1][0].id="_";
+		mazeArr[1][1].id="B";
+		mazeArr[1][2].id="_";
+		mazeArr[1][3].id="_";
+		mazeArr[1][4].id="_";
+		mazeArr[1][5].id="B";
+		mazeArr[1][6].id="_";
+		mazeArr[1][7].id="_";
+		mazeArr[1][8].id="_";
+		mazeArr[1][9].id="_";
+
+		mazeArr[2][0].id="_";
+		mazeArr[2][1].id="B";
+		mazeArr[2][2].id="B";
+		mazeArr[2][3].id="_";
+		mazeArr[2][4].id="_";
+		mazeArr[2][5].id="_";
+		mazeArr[2][6].id="_";
+		mazeArr[2][7].id="_";
+		mazeArr[2][8].id="_";
+		mazeArr[2][9].id="B";
+
+		mazeArr[3][0].id="B";
+		mazeArr[3][1].id="_";
+		mazeArr[3][2].id="_";
+		mazeArr[3][3].id="B";
+		mazeArr[3][4].id="_";
+		mazeArr[3][5].id="_";
+		mazeArr[3][6].id="_";
+		mazeArr[3][7].id="_";
+		mazeArr[3][8].id="B";
+		mazeArr[3][9].id="_";
+
+
+		mazeArr[4][0].id="_";
+		mazeArr[4][1].id="_";
+		mazeArr[4][2].id="_";
+		mazeArr[4][3].id="B";
+		mazeArr[4][4].id="B";
+		mazeArr[4][5].id="_";
+		mazeArr[4][6].id="B";
+		mazeArr[4][7].id="_";
+		mazeArr[4][8].id="_";
+		mazeArr[4][9].id="_";
+		
+		mazeArr[5][0].id="B";
+        mazeArr[5][1].id="_";
+ 		mazeArr[5][2].id="B";
+		mazeArr[5][3].id="_";
+		mazeArr[5][4].id="B";
+        mazeArr[5][5].id="B";
+ 		mazeArr[5][6].id="B";
+		mazeArr[5][7].id="_";
+		mazeArr[5][8].id="B";
+		mazeArr[5][9].id="_";
+
+		mazeArr[6][0].id="_";
+        mazeArr[6][1].id="_";
+ 		mazeArr[6][2].id="_";
+		mazeArr[6][3].id="_";
+		mazeArr[6][4].id="B";
+        mazeArr[6][5].id="B";
+ 		mazeArr[6][6].id="_";
+		mazeArr[6][7].id="B";
+		mazeArr[6][8].id="_";
+		mazeArr[6][9].id="B";
+
+		mazeArr[7][0].id="B";
+        mazeArr[7][1].id="_";
+ 		mazeArr[7][2].id="_";
+		mazeArr[7][3].id="B";
+		mazeArr[7][4].id="B";
+        mazeArr[7][5].id="_";
+ 		mazeArr[7][6].id="B";
+		mazeArr[7][7].id="_";
+		mazeArr[7][8].id="B";
+		mazeArr[7][9].id="_";
+
+		mazeArr[8][0].id="_";
+        mazeArr[8][1].id="_";
+ 		mazeArr[8][2].id="_";
+		mazeArr[8][3].id="_";
+		mazeArr[8][4].id="_";
+        mazeArr[8][5].id="_";
+ 		mazeArr[8][6].id="_";
+		mazeArr[8][7].id="_";
+		mazeArr[8][8].id="_";
+		mazeArr[8][9].id="_";
+
+		mazeArr[9][0].id="_";
+        mazeArr[9][1].id="B";
+ 		mazeArr[9][2].id="_";
+		mazeArr[9][3].id="_";
+		mazeArr[9][4].id="B";
+        mazeArr[9][5].id="B";
+ 		mazeArr[9][6].id="_";
+		mazeArr[9][7].id="_";
+		mazeArr[9][8].id="_";
+		mazeArr[9][9].id="G";
+		
 
 		while (true) {
 			clearFire(size);
@@ -457,6 +552,7 @@ public class MazeFire{
 				String token[] = getChildIndex.split(",");
 				int row = Integer.parseInt(token[0]);
 				int col = Integer.parseInt(token[1]);
+				
 
 				if (!mazeArr[row][col].id.equals("B") && !closedSet.contains(getChildIndex)) {
 					fringeBFS.add(getChildIndex);
@@ -503,12 +599,30 @@ public class MazeFire{
 
 					int row3 = Integer.parseInt(token[0]);
 					int col3 = Integer.parseInt(token[1]);
-					if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0 || mazeArr[row3][col3].id.equals("B")) {
+					
+					if ((row3 > (size - 1)) || (col3 > (size - 1)) || (row3 < 0) || (col3 < 0) ) {
+						
 						children.remove(i);
 						i = 0;
 					}
 				}
-
+				//removing blocked cells from children list
+				for(int i=0;i<children.size();i++) {
+					String temp=children.get(i);
+					String token[] = temp.split(",");
+					int row = Integer.parseInt(token[0]);
+					int col=0;
+					if(token[1].indexOf("|") == -1){
+						col = Integer.parseInt(token[1]);
+					}else{
+						col = Integer.parseInt(token[1].substring(0,token[1].indexOf("|")));
+					}
+					
+					if(mazeArr[row][col].id.equals("B")) {
+						children.remove(i);
+					}
+				}
+     
 				for (int i = 0; i < children.size(); i++) {
 					String getChildIndex = children.get(i);
 					String token[] = getChildIndex.split(",");
@@ -521,7 +635,7 @@ public class MazeFire{
 					}
 					double d = mazeArr[currentRow][currentCol].distance;
 					double estimation = euclidean(getChildIndex,goalPositionA);
-
+               
 					if(d + 1 + estimation < mazeArr[row][col].distance){
 						mazeArr[row][col].distance = d + 1;
 						fringeA.add(row + "," + col + "|" + (mazeArr[row][col].distance + estimation));
@@ -536,6 +650,7 @@ public class MazeFire{
 			return;
 		}
 		printPath(mazeArr[goalRow][goalCol]);
+		
 	}
 
 	public static double euclidean(String currentState, String goalState){
