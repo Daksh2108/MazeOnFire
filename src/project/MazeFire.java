@@ -5,6 +5,7 @@ import java.util.Stack;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Comparator;
@@ -19,6 +20,7 @@ public class MazeFire{
 	// Stack for keeping track of shortest path
 	public static Stack<String> fringe = new Stack<>();
 	public static Queue<String> fringeBFS = new PriorityQueue<>();
+	public static Queue<String> fringeStrategyOne = new PriorityQueue<>();
 	public static PriorityQueue<String> fringeA = new PriorityQueue<>(new Comparator<String>(){
 		public int compare(String s1, String s2){
 			String distance1 = s1.substring(s1.indexOf("|")+1);
@@ -201,10 +203,11 @@ public class MazeFire{
 			case 5:
 				System.out.println("Enter a q value for the fire");
 				Scanner sc5 = new Scanner(System.in);
-				Double q = sc5.nextDouble();
+				double q = sc5.nextDouble();
 				fireGenerator(size);
 				System.out.println("Fire started (labeled F)");
 				printMaze(size);
+				strategy1(startPosition, goalPosition, size, q);
 				break;
 
 			case 9:
@@ -273,11 +276,11 @@ public class MazeFire{
 	}
 	
 	//method to advance fire
-	public static void advanceFire(int q) {
+	public static void advanceFire(double q) {
 		Node[][] copy = mazeArr;
 		for(int i=0; i<mazeArr.length; i++) {
 			for(int j=0; j<mazeArr.length; j++) {
-				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].id.equals("B")) {
+				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].id.equals("B") && !mazeArr[i][j].id.equals("S") && !mazeArr[i][j].id.equals("G")) {
 					//check how many neighbors are on fire
 					int k = neighborFireCheck(i,j,mazeArr.length);
 					double prob = 1 - (Math.pow(1-q, k));
@@ -613,9 +616,8 @@ public class MazeFire{
 						i = -1;
 					}
 				}
+
 				//removing blocked cells from children list
-				
-				
 				for(int i=0;i<children.size();i++) {
 					String temp=children.get(i);
 					String token[] = temp.split(",");
@@ -681,11 +683,96 @@ public class MazeFire{
 		return Math.sqrt(((goalCol-startCol)*(goalCol-startCol)) + ((goalRow-startRow)*(goalRow-startRow)));
 	}
 	
-	public static void strategy1(String startPosition, String goalPosition) {
+	public static void strategy1(String startPosition, String goalPosition,int size, double q) {
 		//compute the shortest path and follow it until agent is trapped and burns or makes his way out
-		 
-	
-	
+		String startToken[] = startPosition.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = Integer.parseInt(startToken[1]);
+
+		String endToken[] = goalPosition.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
+
+		int currentStateRow=0;
+		int currentStateCol=0;
+
+		fringeStrategyOne.add(startPosition);
+		ArrayList<String> closedSet = new ArrayList<>();
+
+		while (!fringeStrategyOne.isEmpty()) {
+			String currentState = fringeStrategyOne.remove();
+			String currentToken[] = currentState.split(",");
+			currentStateRow = Integer.parseInt(currentToken[0]);
+			currentStateCol = Integer.parseInt(currentToken[1]);
+
+			if (currentState.equals(goalPosition)) {
+				strategy1Supplement(goalRow, goalCol, q);
+				return;
+			}
+			ArrayList<String> children = findChildren(currentState, size);
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex = children.get(i);
+				String token[] = getChildIndex.split(",");
+
+				int row3 = Integer.parseInt(token[0]);
+				int col3 = Integer.parseInt(token[1]);
+				if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0) {
+					children.remove(i);
+					i = -1;
+				}
+			}
+
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex = children.get(i);
+				String token[] = getChildIndex.split(",");
+				int row = Integer.parseInt(token[0]);
+				int col = Integer.parseInt(token[1]);
+
+				if (!mazeArr[row][col].id.equals("B") && !mazeArr[row][col].id.equals("F") && !closedSet.contains(getChildIndex)) {
+					fringeStrategyOne.add(getChildIndex);
+					mazeArr[row][col].prev = mazeArr[currentStateRow][currentStateCol];
+				}
+			}
+			closedSet.add(currentState);
+		}
+		printPath(mazeArr[currentStateRow][currentStateCol]);
+		System.out.println("Path does not exist");
 	}
+
+	public static void strategy1Supplement(int goalRow, int goalCol, double q){
+		//construct the path
+		ArrayList<String> arr = new ArrayList<>();
+		Node ptr = mazeArr[goalRow][goalCol];
+		while (ptr != null) {
+			arr.add(ptr.row + "," + ptr.col);
+			ptr = ptr.prev;
+		}
+		Collections.reverse(arr);
 	
+		//loop through path one step at a time and at every step increase fire
+		int currentRow = 0;
+		int currentCol = 0;
+		for(int i=0; i<arr.size(); i++){
+			String token[] = arr.get(i).split(",");
+			currentRow = Integer.parseInt(token[0]);
+			currentCol = Integer.parseInt(token[1]);
+			System.out.println("Step taken: " + currentRow + "," + currentCol);
+			advanceFire(q);
+			printMaze(mazeArr.length);
+			if(i+1<arr.size()){
+				String nextindex= arr.get(i+1);
+				String token3[]=nextindex.split(",");
+				int nextRow = Integer.parseInt(token3[0]);
+				int nextCol = Integer.parseInt(token3[1]);
+				if(mazeArr[nextRow][nextCol].id.equals("B") || mazeArr[nextRow][nextCol].id.equals("F")){
+					System.out.println("Agent's next step leads into a blockage/fire");
+					System.out.println("Agent's path before getting trapped");
+					printPath(mazeArr[currentRow][currentCol]);
+					return;
+				}
+			}
+		}
+		System.out.println("Agent reached goal safely");
+		printPath(mazeArr[goalRow][goalCol]);
+	}
 }
