@@ -170,8 +170,7 @@ public class MazeFire{
 	public static void fireGenerator(int size) {
 		int i = (int)(Math.random() * size);
 		int j = (int)(Math.random() * size);
-		while(mazeArr[i][j].equals("S") || mazeArr[i][j].id.equals("G") || mazeArr[i][j].equals("B") 
-				|| (i == 0 && j == 0) || (i == size-1 && j == size-1)) {
+		while(mazeArr[i][j].id.equals("S") || mazeArr[i][j].id.equals("G") || mazeArr[i][j].id.equals("B")) {
 			i = (int)(Math.random() * size);
 			j = (int)(Math.random() * size);
 		}
@@ -183,7 +182,7 @@ public class MazeFire{
 		Node[][] copy = mazeArr;
 		for(int i=0; i<mazeArr.length; i++) {
 			for(int j=0; j<mazeArr.length; j++) {
-				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].equals("B")) {
+				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].id.equals("B")) {
 					//check how many neighbors are on fire
 					int k = neighborFireCheck(i,j,mazeArr.length);
 					double prob = 1 - (Math.pow(1-q, k));
