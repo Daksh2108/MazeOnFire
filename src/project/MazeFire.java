@@ -52,116 +52,116 @@ public class MazeFire{
 		printMaze(size);
 		
 		
-		mazeArr[0][0].id="S";
-        mazeArr[0][1].id="_";
- 		mazeArr[0][2].id="-";
-		mazeArr[0][3].id="_";
-		mazeArr[0][4].id="_";
-        mazeArr[0][5].id="B";
- 		mazeArr[0][6].id="_";
-		mazeArr[0][7].id="_";
-		mazeArr[0][8].id="B";
-		mazeArr[0][9].id="_";
-		 
- 		mazeArr[1][0].id="_";
-		mazeArr[1][1].id="B";
-		mazeArr[1][2].id="_";
-		mazeArr[1][3].id="_";
-		mazeArr[1][4].id="_";
-		mazeArr[1][5].id="B";
-		mazeArr[1][6].id="_";
-		mazeArr[1][7].id="_";
-		mazeArr[1][8].id="_";
-		mazeArr[1][9].id="_";
-
-		mazeArr[2][0].id="_";
-		mazeArr[2][1].id="B";
-		mazeArr[2][2].id="B";
-		mazeArr[2][3].id="_";
-		mazeArr[2][4].id="_";
-		mazeArr[2][5].id="_";
-		mazeArr[2][6].id="_";
-		mazeArr[2][7].id="_";
-		mazeArr[2][8].id="_";
-		mazeArr[2][9].id="B";
-
-		mazeArr[3][0].id="B";
-		mazeArr[3][1].id="_";
-		mazeArr[3][2].id="_";
-		mazeArr[3][3].id="B";
-		mazeArr[3][4].id="_";
-		mazeArr[3][5].id="_";
-		mazeArr[3][6].id="_";
-		mazeArr[3][7].id="_";
-		mazeArr[3][8].id="B";
-		mazeArr[3][9].id="_";
-
-
-		mazeArr[4][0].id="_";
-		mazeArr[4][1].id="_";
-		mazeArr[4][2].id="_";
-		mazeArr[4][3].id="B";
-		mazeArr[4][4].id="B";
-		mazeArr[4][5].id="_";
-		mazeArr[4][6].id="B";
-		mazeArr[4][7].id="_";
-		mazeArr[4][8].id="_";
-		mazeArr[4][9].id="_";
-		
-		mazeArr[5][0].id="B";
-        mazeArr[5][1].id="_";
- 		mazeArr[5][2].id="B";
-		mazeArr[5][3].id="_";
-		mazeArr[5][4].id="B";
-        mazeArr[5][5].id="B";
- 		mazeArr[5][6].id="B";
-		mazeArr[5][7].id="_";
-		mazeArr[5][8].id="B";
-		mazeArr[5][9].id="_";
-
-		mazeArr[6][0].id="_";
-        mazeArr[6][1].id="_";
- 		mazeArr[6][2].id="_";
-		mazeArr[6][3].id="_";
-		mazeArr[6][4].id="B";
-        mazeArr[6][5].id="B";
- 		mazeArr[6][6].id="_";
-		mazeArr[6][7].id="B";
-		mazeArr[6][8].id="_";
-		mazeArr[6][9].id="B";
-
-		mazeArr[7][0].id="B";
-        mazeArr[7][1].id="_";
- 		mazeArr[7][2].id="_";
-		mazeArr[7][3].id="B";
-		mazeArr[7][4].id="B";
-        mazeArr[7][5].id="_";
- 		mazeArr[7][6].id="B";
-		mazeArr[7][7].id="_";
-		mazeArr[7][8].id="B";
-		mazeArr[7][9].id="_";
-
-		mazeArr[8][0].id="_";
-        mazeArr[8][1].id="_";
- 		mazeArr[8][2].id="_";
-		mazeArr[8][3].id="_";
-		mazeArr[8][4].id="_";
-        mazeArr[8][5].id="_";
- 		mazeArr[8][6].id="_";
-		mazeArr[8][7].id="_";
-		mazeArr[8][8].id="_";
-		mazeArr[8][9].id="_";
-
-		mazeArr[9][0].id="_";
-        mazeArr[9][1].id="B";
- 		mazeArr[9][2].id="_";
-		mazeArr[9][3].id="_";
-		mazeArr[9][4].id="B";
-        mazeArr[9][5].id="B";
- 		mazeArr[9][6].id="_";
-		mazeArr[9][7].id="_";
-		mazeArr[9][8].id="_";
-		mazeArr[9][9].id="G";
+//		mazeArr[0][0].id="S";
+//        mazeArr[0][1].id="_";
+// 		mazeArr[0][2].id="-";
+//		mazeArr[0][3].id="_";
+//		mazeArr[0][4].id="_";
+//        mazeArr[0][5].id="B";
+// 		mazeArr[0][6].id="_";
+//		mazeArr[0][7].id="_";
+//		mazeArr[0][8].id="B";
+//		mazeArr[0][9].id="_";
+//		 
+// 		mazeArr[1][0].id="_";
+//		mazeArr[1][1].id="B";
+//		mazeArr[1][2].id="_";
+//		mazeArr[1][3].id="_";
+//		mazeArr[1][4].id="_";
+//		mazeArr[1][5].id="B";
+//		mazeArr[1][6].id="_";
+//		mazeArr[1][7].id="_";
+//		mazeArr[1][8].id="_";
+//		mazeArr[1][9].id="_";
+//
+//		mazeArr[2][0].id="_";
+//		mazeArr[2][1].id="B";
+//		mazeArr[2][2].id="B";
+//		mazeArr[2][3].id="_";
+//		mazeArr[2][4].id="_";
+//		mazeArr[2][5].id="_";
+//		mazeArr[2][6].id="_";
+//		mazeArr[2][7].id="_";
+//		mazeArr[2][8].id="_";
+//		mazeArr[2][9].id="B";
+//
+//		mazeArr[3][0].id="B";
+//		mazeArr[3][1].id="_";
+//		mazeArr[3][2].id="_";
+//		mazeArr[3][3].id="B";
+//		mazeArr[3][4].id="_";
+//		mazeArr[3][5].id="_";
+//		mazeArr[3][6].id="_";
+//		mazeArr[3][7].id="_";
+//		mazeArr[3][8].id="B";
+//		mazeArr[3][9].id="_";
+//
+//
+//		mazeArr[4][0].id="_";
+//		mazeArr[4][1].id="_";
+//		mazeArr[4][2].id="_";
+//		mazeArr[4][3].id="B";
+//		mazeArr[4][4].id="B";
+//		mazeArr[4][5].id="_";
+//		mazeArr[4][6].id="B";
+//		mazeArr[4][7].id="_";
+//		mazeArr[4][8].id="_";
+//		mazeArr[4][9].id="_";
+//		
+//		mazeArr[5][0].id="B";
+//        mazeArr[5][1].id="_";
+// 		mazeArr[5][2].id="B";
+//		mazeArr[5][3].id="_";
+//		mazeArr[5][4].id="B";
+//        mazeArr[5][5].id="B";
+// 		mazeArr[5][6].id="B";
+//		mazeArr[5][7].id="_";
+//		mazeArr[5][8].id="B";
+//		mazeArr[5][9].id="_";
+//
+//		mazeArr[6][0].id="_";
+//        mazeArr[6][1].id="_";
+// 		mazeArr[6][2].id="_";
+//		mazeArr[6][3].id="_";
+//		mazeArr[6][4].id="B";
+//        mazeArr[6][5].id="B";
+// 		mazeArr[6][6].id="_";
+//		mazeArr[6][7].id="B";
+//		mazeArr[6][8].id="_";
+//		mazeArr[6][9].id="B";
+//
+//		mazeArr[7][0].id="B";
+//        mazeArr[7][1].id="_";
+// 		mazeArr[7][2].id="_";
+//		mazeArr[7][3].id="B";
+//		mazeArr[7][4].id="B";
+//        mazeArr[7][5].id="_";
+// 		mazeArr[7][6].id="B";
+//		mazeArr[7][7].id="_";
+//		mazeArr[7][8].id="B";
+//		mazeArr[7][9].id="_";
+//
+//		mazeArr[8][0].id="_";
+//        mazeArr[8][1].id="_";
+// 		mazeArr[8][2].id="_";
+//		mazeArr[8][3].id="_";
+//		mazeArr[8][4].id="_";
+//        mazeArr[8][5].id="_";
+// 		mazeArr[8][6].id="_";
+//		mazeArr[8][7].id="_";
+//		mazeArr[8][8].id="_";
+//		mazeArr[8][9].id="_";
+//
+//		mazeArr[9][0].id="_";
+//        mazeArr[9][1].id="B";
+// 		mazeArr[9][2].id="_";
+//		mazeArr[9][3].id="_";
+//		mazeArr[9][4].id="B";
+//        mazeArr[9][5].id="B";
+// 		mazeArr[9][6].id="_";
+//		mazeArr[9][7].id="_";
+//		mazeArr[9][8].id="_";
+//		mazeArr[9][9].id="G";
 		
 
 		while (true) {
