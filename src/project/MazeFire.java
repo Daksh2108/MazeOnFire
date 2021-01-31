@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.lang.Math;
 import java.util.Random;
 
@@ -19,9 +20,9 @@ public class MazeFire{
 
 	// Stack for keeping track of shortest path
 	public static Stack<String> fringe = new Stack<>();
-	public static Queue<String> fringeBFS = new PriorityQueue<>();
-	public static Queue<String> fringeStrategyOne = new PriorityQueue<>();
-	public static Queue<String> fringeStrategyTwo = new PriorityQueue<>();
+	public static Queue<String> fringeBFS = new LinkedList<>();
+	public static Queue<String> fringeStrategyOne = new LinkedList<>();
+	public static Queue<String> fringeStrategyTwo = new LinkedList<>();
 	public static PriorityQueue<String> fringeA = new PriorityQueue<>(new Comparator<String>(){
 		public int compare(String s1, String s2){
 			String distance1 = s1.substring(s1.indexOf("|")+1);
@@ -209,6 +210,7 @@ public class MazeFire{
 				fireGenerator(size);
 				System.out.println("Fire started (labeled F)");
 				printMaze(size);
+				System.out.println();
 				strategy1(startPosition, goalPosition, size, q1);
 				break;
 			case 6:
@@ -218,6 +220,7 @@ public class MazeFire{
 				fireGenerator(size);
 				System.out.println("Fire started (labeled F)");
 				printMaze(size);
+				System.out.println();
 				strategy2(startPosition, goalPosition, size, q2);
 				break;
 			case 9:
@@ -803,7 +806,6 @@ public class MazeFire{
 		ArrayList<String> path = new ArrayList<>();
 		//run a while loop until starting position reaches the goal or gets trapped
 		while(!mazeArr[startRow][startCol].id.equals("G")){
-			
 			//check if agent is at goal
 			//we need to check if the agent is trapped, if so break
 			//run BFS with each starting position
@@ -823,19 +825,27 @@ public class MazeFire{
 			advanceFire(q);
 			//check to see if agent's cell caught on fire
 			if(mazeArr[startRow][startCol].id.equals("F")){
+				System.out.println("Step taken: " + "(" + startPosition + ")");
+				printMaze(size);
+				System.out.println();
 				System.out.println("Agent caught on fire");
 				return;
 			}
 			//print step they took and maze
 			System.out.println("Step taken: " + "(" + startPosition + ")");
 	        printMaze(size);
+	        System.out.println();
 		}
-		System.out.println("Step taken: " + "(" + goalPosition + ")");
-	    printMaze(size);
 		System.out.println("Agent successfully made it to goal");
 	}
 
 	public static ArrayList<String> strategy2BFS(String startPosition, String goalPosition, int size, double q){
+		//resetting the prev pointers to null
+		for(int i=0; i<size; i++) {
+			for(int j=0; j<size; j++) {
+				mazeArr[i][j].prev = null;
+			}
+		}
 		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
 		int startCol = Integer.parseInt(startToken[1]);
@@ -846,7 +856,8 @@ public class MazeFire{
 		
 		int currentStateRow=0;
 		int currentStateCol=0;
-
+		
+		fringeStrategyTwo.clear();
 		fringeStrategyTwo.add(startPosition);
 		ArrayList<String> closedSet = new ArrayList<>();
 		ArrayList<String> arr = new ArrayList<>();
