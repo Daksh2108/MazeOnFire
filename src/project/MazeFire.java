@@ -21,6 +21,7 @@ public class MazeFire{
 	public static Stack<String> fringe = new Stack<>();
 	public static Queue<String> fringeBFS = new PriorityQueue<>();
 	public static Queue<String> fringeStrategyOne = new PriorityQueue<>();
+	public static Queue<String> fringeStrategyTwo = new PriorityQueue<>();
 	public static PriorityQueue<String> fringeA = new PriorityQueue<>(new Comparator<String>(){
 		public int compare(String s1, String s2){
 			String distance1 = s1.substring(s1.indexOf("|")+1);
@@ -173,6 +174,7 @@ public class MazeFire{
 			System.out.println("Enter 3 for Problem 3");
 			System.out.println("Enter 4 for Problem 4");
 			System.out.println("Enter 5 for Strategy 1 in fire maze");
+			System.out.println("Enter 6 for Strategy 2 in fire maze");
 			System.out.println("Enter 9 to Quit");
 			Scanner sc3 = new Scanner(System.in);
 			int menu = sc3.nextInt();
@@ -203,13 +205,21 @@ public class MazeFire{
 			case 5:
 				System.out.println("Enter a q value for the fire");
 				Scanner sc5 = new Scanner(System.in);
-				double q = sc5.nextDouble();
+				double q1 = sc5.nextDouble();
 				fireGenerator(size);
 				System.out.println("Fire started (labeled F)");
 				printMaze(size);
-				strategy1(startPosition, goalPosition, size, q);
+				strategy1(startPosition, goalPosition, size, q1);
 				break;
-
+			case 6:
+				System.out.println("Enter a q value for the fire");
+				Scanner sc6 = new Scanner(System.in);
+				double q2 = sc6.nextDouble();
+				fireGenerator(size);
+				System.out.println("Fire started (labeled F)");
+				printMaze(size);
+				strategy2(startPosition, goalPosition, size, q2);
+				break;
 			case 9:
 				System.out.println("Program ended");
 				System.exit(0);
@@ -759,6 +769,11 @@ public class MazeFire{
 			System.out.println("Step taken: " + currentRow + "," + currentCol);
 			advanceFire(q);
 			printMaze(mazeArr.length);
+			//check to see if agent's cell caught on fire
+			if(mazeArr[currentRow][currentCol].id.equals("F")){
+				System.out.println("Agent caught on fire");
+				return;
+			}
 			if(i+1<arr.size()){
 				String nextindex= arr.get(i+1);
 				String token3[]=nextindex.split(",");
@@ -775,4 +790,110 @@ public class MazeFire{
 		System.out.println("Agent reached goal safely");
 		printPath(mazeArr[goalRow][goalCol]);
 	}
+
+	public static void strategy2(String startPosition, String goalPosition, int size, double q){
+		String startToken[] = startPosition.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = Integer.parseInt(startToken[1]);
+
+		String endToken[] = goalPosition.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
+
+		ArrayList<String> path = new ArrayList<>();
+		//run a while loop until starting position reaches the goal or gets trapped
+		while(!mazeArr[startRow][startCol].id.equals("G")){
+			
+			//check if agent is at goal
+			//we need to check if the agent is trapped, if so break
+			//run BFS with each starting position
+			path = strategy2BFS(startPosition, goalPosition, size, q);
+			
+			if(path.size() == 0){
+				System.out.println("There is no path from the agent's current position that reaches the goal");
+				return;
+			}
+			//make the agent move to the next step
+			//change starting position to next step (agent's current location)
+			startPosition = path.get(1);
+			String nextToken[] = startPosition.split(",");
+			startRow = Integer.parseInt(nextToken[0]);
+			startCol = Integer.parseInt(nextToken[1]);
+			//generate fire
+			advanceFire(q);
+			//check to see if agent's cell caught on fire
+			if(mazeArr[startRow][startCol].id.equals("F")){
+				System.out.println("Agent caught on fire");
+				return;
+			}
+			//print step they took and maze
+			System.out.println("Step taken: " + "(" + startPosition + ")");
+	        printMaze(size);
+		}
+		System.out.println("Step taken: " + "(" + goalPosition + ")");
+	    printMaze(size);
+		System.out.println("Agent successfully made it to goal");
+	}
+
+	public static ArrayList<String> strategy2BFS(String startPosition, String goalPosition, int size, double q){
+		String startToken[] = startPosition.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = Integer.parseInt(startToken[1]);
+
+		String endToken[] = goalPosition.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
+		
+		int currentStateRow=0;
+		int currentStateCol=0;
+
+		fringeStrategyTwo.add(startPosition);
+		ArrayList<String> closedSet = new ArrayList<>();
+		ArrayList<String> arr = new ArrayList<>();
+
+		while (!fringeStrategyTwo.isEmpty()) {
+			String currentState = fringeStrategyTwo.remove();
+			String currentToken[] = currentState.split(",");
+			currentStateRow = Integer.parseInt(currentToken[0]);
+			currentStateCol = Integer.parseInt(currentToken[1]);
+
+			if (currentState.equals(goalPosition)) {
+				//strategy1Supplement(goalRow, goalCol, q);
+				Node ptr = mazeArr[goalRow][goalCol];
+				while (ptr != null) {
+					arr.add(ptr.row + "," + ptr.col);
+					ptr = ptr.prev;
+				}
+				Collections.reverse(arr);
+				return arr;
+			}
+			ArrayList<String> children = findChildren(currentState, size);
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex = children.get(i);
+				String token[] = getChildIndex.split(",");
+
+				int row3 = Integer.parseInt(token[0]);
+				int col3 = Integer.parseInt(token[1]);
+				if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0) {
+					children.remove(i);
+					i = -1;
+				}
+			}
+
+			for (int i = 0; i < children.size(); i++) {
+				String getChildIndex = children.get(i);
+				String token[] = getChildIndex.split(",");
+				int row = Integer.parseInt(token[0]);
+				int col = Integer.parseInt(token[1]);
+
+				if (!mazeArr[row][col].id.equals("B") && !mazeArr[row][col].id.equals("F") && !closedSet.contains(getChildIndex)) {
+					fringeStrategyTwo.add(getChildIndex);
+					mazeArr[row][col].prev = mazeArr[currentStateRow][currentStateCol];
+				}
+			}
+			closedSet.add(currentState);
+		}
+		return arr;
+	}
+
 }
