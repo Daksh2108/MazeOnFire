@@ -765,13 +765,14 @@ public class MazeFire{
 		//loop through path one step at a time and at every step increase fire
 		int currentRow = 0;
 		int currentCol = 0;
-		for(int i=0; i<arr.size(); i++){
+		for(int i=1; i<arr.size(); i++){
 			String token[] = arr.get(i).split(",");
 			currentRow = Integer.parseInt(token[0]);
 			currentCol = Integer.parseInt(token[1]);
 			System.out.println("Step taken: " + currentRow + "," + currentCol);
 			advanceFire(q);
 			printMaze(mazeArr.length);
+			System.out.println();
 			//check to see if agent's cell caught on fire
 			if(mazeArr[currentRow][currentCol].id.equals("F")){
 				System.out.println("Agent caught on fire");
@@ -783,8 +784,8 @@ public class MazeFire{
 				int nextRow = Integer.parseInt(token3[0]);
 				int nextCol = Integer.parseInt(token3[1]);
 				if(mazeArr[nextRow][nextCol].id.equals("B") || mazeArr[nextRow][nextCol].id.equals("F")){
-					System.out.println("Agent's next step leads into a blockage/fire");
-					System.out.println("Agent's path before getting trapped");
+					System.out.println("Agent's next step " + "(" + nextRow + "," + nextCol + ")" + " leads into a blockage/fire");
+					System.out.println("Agent's path before getting trapped:");
 					printPath(mazeArr[currentRow][currentCol]);
 					return;
 				}
