@@ -290,7 +290,13 @@ public class MazeFire{
 	
 	//method to advance fire
 	public static void advanceFire(double q) {
-		Node[][] copy = mazeArr;
+		Node[][] copy = new Node[mazeArr.length][mazeArr.length];
+		for(int i=0; i<mazeArr.length; i++) {
+			for(int j=0; j<mazeArr.length; j++) {
+				copy[i][j] = new Node("", null,0,0,0.0,0.0);
+				copy[i][j].id = mazeArr[i][j].id;
+			}
+		}
 		for(int i=0; i<mazeArr.length; i++) {
 			for(int j=0; j<mazeArr.length; j++) {
 				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].id.equals("B") && !mazeArr[i][j].id.equals("S") && !mazeArr[i][j].id.equals("G")) {
@@ -453,6 +459,22 @@ public class MazeFire{
 			String col2 = col - 1 + "";
 			children.add(row + "," + col2);
 			return children;
+		}
+		if(row == 0 && col == size-1) {
+			//left
+			String col2 = col - 1 + "";
+			children.add(row + "," + col2);
+			//down
+			String row2 = row + 1 + "";
+			children.add(row2 + "," + col);
+		}
+		if(row == size-1 && col == 0) {
+			//up
+			String row2 = row - 1 + "";
+			children.add(row2 + "," + col);
+			//right
+			String col2 = col + 1 + "";
+			children.add(row + "," + col2);
 		}
 		if (col == 0) {
 			// right
