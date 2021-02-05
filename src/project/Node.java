@@ -7,14 +7,15 @@ public class Node {
 	 int col=0;
 	 double distance=0.0;
 	 double eucliDistance=0.0;
+	 int prob = 0;
 	
-	public Node(String id, Node prev,int row, int col,double distance,double eucliDistance) {
+	public Node(String id, Node prev,int row, int col,double distance,double eucliDistance, int prob) {
 		this.id=id;
 		this.prev=prev;
 		this.row=row;
 		this.col=col;
 		this.distance=distance;
 		this.eucliDistance=eucliDistance;
+		this.prob=prob;
 	}
-	
 }

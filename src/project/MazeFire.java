@@ -23,6 +23,7 @@ public class MazeFire{
 	public static Queue<String> fringeBFS = new LinkedList<>();
 	public static Queue<String> fringeStrategyOne = new LinkedList<>();
 	public static Queue<String> fringeStrategyTwo = new LinkedList<>();
+	public static Queue<String> fringeStrategyThree = new LinkedList<>();
 	public static PriorityQueue<String> fringeA = new PriorityQueue<>(new Comparator<String>(){
 		public int compare(String s1, String s2){
 			String distance1 = s1.substring(s1.indexOf("|")+1);
@@ -243,7 +244,7 @@ public class MazeFire{
 
 		for (int i = 0; i < mazeArr.length; i++) {
 			for (int j = 0; j < mazeArr.length; j++) {
-				mazeArr[i][j] = new Node("", null, i, j,0,0);
+				mazeArr[i][j] = new Node("", null, i, j,0,0,0);
 			}
 		}
 		for (int i = 0; i < size; i++) {
@@ -287,13 +288,15 @@ public class MazeFire{
 		}
 		mazeArr[i][j].id = "F";
 	}
+
+
 	
 	//method to advance fire
 	public static void advanceFire(double q) {
 		Node[][] copy = new Node[mazeArr.length][mazeArr.length];
 		for(int i=0; i<mazeArr.length; i++) {
 			for(int j=0; j<mazeArr.length; j++) {
-				copy[i][j] = new Node("", null,0,0,0.0,0.0);
+				copy[i][j] = new Node("", null,0,0,0.0,0.0,0);
 				copy[i][j].id = mazeArr[i][j].id;
 			}
 		}
@@ -930,4 +933,275 @@ public class MazeFire{
 		return arr;
 	}
 
+
+	//strategy2bfs code, just change the fringe from linkedlist to priority que based on probability 
+
+	//method that runs 10 times and updates the counter for number of fire on each index
+
+
+	public static void strategy3(String startPosition, String goalPosition, int size, double q){
+		
+	}
+
+	public static void probabilityRunner(String startPosition, String goalPosition, int size, double q){
+		
+		String startToken[] = startPosition.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = Integer.parseInt(startToken[1]);
+
+		String endToken[] = goalPosition.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
+
+		//make 10 copies of the mazeArr
+		Node trial1[][] = new Node[size][size];
+		Node trial2[][] = new Node[size][size];
+		Node trial3[][] = new Node[size][size];
+		Node trial4[][] = new Node[size][size];
+		Node trial5[][] = new Node[size][size];
+		Node trial6[][] = new Node[size][size];
+		Node trial7[][] = new Node[size][size];
+		Node trial8[][] = new Node[size][size];
+		Node trial9[][] = new Node[size][size];
+		Node trial10[][] = new Node[size][size];
+		for(int i=0; i<size; i++){
+			for(int j=0; j<size; j++){
+				trial1[i][j] = mazeArr[i][j];
+				trial2[i][j] = mazeArr[i][j];
+				trial3[i][j] = mazeArr[i][j];
+				trial4[i][j] = mazeArr[i][j];
+				trial5[i][j] = mazeArr[i][j];
+				trial6[i][j] = mazeArr[i][j];
+				trial7[i][j] = mazeArr[i][j];
+				trial8[i][j] = mazeArr[i][j];
+				trial9[i][j] = mazeArr[i][j];
+				trial10[i][j] = mazeArr[i][j];
+			}
+		}
+		
+
+		//run bfs algo on all trial mazes and at the end increment counter for prob by 1 if cell is on fire
+		trial1 = strategy3Trial(trial1, startPosition, goalPosition, size, q);
+		trial2 = strategy3Trial(trial2, startPosition, goalPosition, size, q);
+		trial3 = strategy3Trial(trial3, startPosition, goalPosition, size, q);
+		trial4 = strategy3Trial(trial4, startPosition, goalPosition, size, q);
+		trial5 = strategy3Trial(trial5, startPosition, goalPosition, size, q);
+		trial6 = strategy3Trial(trial6, startPosition, goalPosition, size, q);
+		trial7 = strategy3Trial(trial7, startPosition, goalPosition, size, q);
+		trial8 = strategy3Trial(trial8, startPosition, goalPosition, size, q);
+		trial9 = strategy3Trial(trial9, startPosition, goalPosition, size, q);
+		trial10 = strategy3Trial(trial8, startPosition, goalPosition, size, q);
+		//run through every trial maze and add up all the prob counters for each cell and set prob in mazeArr
+		updateProb(trial1);
+		updateProb(trial2);
+		updateProb(trial3);
+		updateProb(trial4);
+		updateProb(trial5);
+		updateProb(trial6);
+		updateProb(trial7);
+		updateProb(trial8);
+		updateProb(trial9);
+		updateProb(trial10);
+	}
+
+	public static void updateProb(Node[][] trial){
+		for(int i=0; i<trial.length; i++){
+			for(int j=0; j<trial.length; j++){
+				if(trial[i][j].id.equals("F")){
+					mazeArr[i][j].prob++;
+				}
+			}
+		}
+	}
+
+	//****************************************Future Predicton Of Fire*************************************************************************/
+	public static Node[][] strategy3Trial(Node trial[][], String startPosition, String goalPosition, int size, double q){
+		String startToken[] = startPosition.split(",");
+		int startRow = Integer.parseInt(startToken[0]);
+		int startCol = Integer.parseInt(startToken[1]);
+
+		String endToken[] = goalPosition.split(",");
+		int goalRow = Integer.parseInt(endToken[0]);
+		int goalCol = Integer.parseInt(endToken[1]);
+
+		ArrayList<String> path = new ArrayList<>();
+		//run a while loop until starting position reaches the goal or gets trapped
+		while(!trial[startRow][startCol].id.equals("G")){
+			//check if agent is at goal
+			//we need to check if the agent is trapped, if so break
+			//run BFS with each starting position
+			path = strategy3TrialBFS(trial,startPosition, goalPosition, size, q);
+			
+			if(path.size() == 0){
+				System.out.println("There is no path from the agent's current position that reaches the goal");
+				return trial;
+			}
+			//make the agent move to the next step
+			//change starting position to next step (agent's current location)
+			startPosition = path.get(1);
+			String nextToken[] = startPosition.split(",");
+			startRow = Integer.parseInt(nextToken[0]);
+			startCol = Integer.parseInt(nextToken[1]);
+			//generate fire
+			advanceFireTrial(trial, q);
+			//check to see if agent's cell caught on fire
+			if(trial[startRow][startCol].id.equals("F")){
+				System.out.println("Step taken: " + "(" + startPosition + ")");
+				printMazeTrial(trial,size);
+				System.out.println();
+				System.out.println("Agent caught on fire");
+				return trial;
+			}
+			//print step they took and maze
+			System.out.println("Step taken: " + "(" + startPosition + ")");
+	        printMazeTrial(trial,size);
+	        System.out.println();
+		}
+		System.out.println("Agent successfully made it to goal");
+
+		return trial;
+	}
+	public static ArrayList<String> strategy3TrialBFS(Node trial[][],String startPosition, String goalPosition, int size, double q){
+			//resetting the prev pointers to null
+			for(int i=0; i<size; i++) {
+				for(int j=0; j<size; j++) {
+					trial[i][j].prev = null;
+				}
+			}
+			String startToken[] = startPosition.split(",");
+			int startRow = Integer.parseInt(startToken[0]);
+			int startCol = Integer.parseInt(startToken[1]);
+	
+			String endToken[] = goalPosition.split(",");
+			int goalRow = Integer.parseInt(endToken[0]);
+			int goalCol = Integer.parseInt(endToken[1]);
+			
+			int currentStateRow=0;
+			int currentStateCol=0;
+			
+			fringeStrategyThree.clear();
+			fringeStrategyThree.add(startPosition);
+			ArrayList<String> closedSet = new ArrayList<>();
+			ArrayList<String> arr = new ArrayList<>();
+	
+			while (!fringeStrategyThree.isEmpty()) {
+				String currentState = fringeStrategyThree.remove();
+				String currentToken[] = currentState.split(",");
+				currentStateRow = Integer.parseInt(currentToken[0]);
+				currentStateCol = Integer.parseInt(currentToken[1]);
+	
+				if (currentState.equals(goalPosition)) {
+					//strategy1Supplement(goalRow, goalCol, q);
+					Node ptr = trial[goalRow][goalCol];
+					while (ptr != null) {
+						arr.add(ptr.row + "," + ptr.col);
+						ptr = ptr.prev;
+					}
+					Collections.reverse(arr);
+					return arr;
+				}
+				ArrayList<String> children = findChildren(currentState, size);
+				for (int i = 0; i < children.size(); i++) {
+					String getChildIndex = children.get(i);
+					String token[] = getChildIndex.split(",");
+	
+					int row3 = Integer.parseInt(token[0]);
+					int col3 = Integer.parseInt(token[1]);
+					if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0) {
+						children.remove(i);
+						i = -1;
+					}
+				}
+	
+				for (int i = 0; i < children.size(); i++) {
+					String getChildIndex = children.get(i);
+					String token[] = getChildIndex.split(",");
+					int row = Integer.parseInt(token[0]);
+					int col = Integer.parseInt(token[1]);
+	
+					if (!trial[row][col].id.equals("B") && !trial[row][col].id.equals("F") && !closedSet.contains(getChildIndex)) {
+						fringeStrategyThree.add(getChildIndex);
+						trial[row][col].prev = trial[currentStateRow][currentStateCol];
+					}
+				}
+				closedSet.add(currentState);
+			}
+			return arr;
+	}
+		
+	//method to advance fire
+	public static void advanceFireTrial(Node trial[][], double q) {
+		Node[][] copy = new Node[trial.length][trial.length];
+		for(int i=0; i<trial.length; i++) {
+			for(int j=0; j<trial.length; j++) {
+				copy[i][j] = new Node("", null,0,0,0.0,0.0,0);
+				copy[i][j].id = trial[i][j].id;
+			}
+		}
+		for(int i=0; i<trial.length; i++) {
+			for(int j=0; j<trial.length; j++) {
+				if(!trial[i][j].id.equals("F") && !trial[i][j].id.equals("B") && !trial[i][j].id.equals("S") && !trial[i][j].id.equals("G")) {
+					//check how many neighbors are on fire
+					int k = neighborFireCheckTrial(trial,i,j,trial.length);
+					double prob = 1 - (Math.pow(1-q, k));
+					if(Math.random() <= prob) {
+						copy[i][j].id = "F";
+					}
+				}
+			}
+		}
+		//set mazeArr equal to copy
+		for(int i=0; i<trial.length; i++) {
+			for(int j=0; j<trial.length; j++) {
+				trial[i][j].id = copy[i][j].id;
+			}
+		}
+	}
+	//method to check number of neighbors on fire
+	public static int neighborFireCheckTrial(Node trial[][],int row, int col, int size) {
+		String currentState = row + "," + col; 
+		ArrayList<String> children = findChildren(currentState, size);
+		//filter out the out of bounds children
+		for (int i = 0; i < children.size(); i++) {
+			String getChildIndex = children.get(i);
+			String token[] = getChildIndex.split(",");
+
+			int row3 = Integer.parseInt(token[0]);
+			int col3 = Integer.parseInt(token[1]);
+			if (row3 > size - 1 || col3 > size - 1 || row3 < 0 || col3 < 0) {
+				children.remove(i);
+				i = -1;
+			}
+		}
+		int count = 0;
+		//count number of children on fire
+		for(int i=0; i<children.size(); i++) {
+			String token[] = children.get(i).split(",");
+			int childRow = Integer.parseInt(token[0]);
+			int childCol = Integer.parseInt(token[1]);
+			if(trial[childRow][childCol].id.equals("F")) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	// method to print the maze Trial
+	public static void printMazeTrial(Node trial[][],int size) {
+		int count1 = 0, count2 = 0;
+		for (int i = 0; i < size; i++) {
+			System.out.print(count1 + " ");
+			count1++;
+		}
+		System.out.println();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				System.out.print(trial[i][j].id + " ");
+			}
+			System.out.print(count2);
+			count2++;
+			System.out.println();
+		}
+	}
+	
 }
