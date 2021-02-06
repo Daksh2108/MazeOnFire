@@ -498,6 +498,7 @@ public class MazeFire{
 			//down
 			String row2 = row + 1 + "";
 			children.add(row2 + "," + col);
+			return children;
 		}
 		if(row == size-1 && col == 0) {
 			//up
@@ -506,6 +507,7 @@ public class MazeFire{
 			//right
 			String col2 = col + 1 + "";
 			children.add(row + "," + col2);
+			return children;
 		}
 		if (col == 0) {
 			// right
@@ -1237,7 +1239,7 @@ public class MazeFire{
 				}else{
 					col = Integer.parseInt(token[1].substring(0,token[1].indexOf("|")));
 				}
-				if (!mazeArr[row][col].id.equals("B") && !mazeArr[row][col].id.equals("F") && !closedSet.contains(getChildIndex)) {
+				if (!mazeArr[row][col].id.equals("B") && !mazeArr[row][col].id.equals("F") && !closedSet.contains(getChildIndex + "|" + mazeArr[row][col].prob)) {
 					probabilityFringe.add(row + "," + col + "|" + mazeArr[row][col].prob);
 					mazeArr[row][col].prev = mazeArr[currentStateRow][currentStateCol];
 				}
@@ -1266,7 +1268,7 @@ public class MazeFire{
 			path = strategy3TrialBFS(trial,startPosition, goalPosition, size, q);
 			
 			if(path.size() == 0){
-				System.out.println("There is no path from the agent's current position that reaches the goal");
+				//System.out.println("There is no path from the agent's current position that reaches the goal");
 				return trial;
 			}
 			//make the agent move to the next step
