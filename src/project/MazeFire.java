@@ -308,16 +308,24 @@ public class MazeFire{
 	
 	//method to add fire to the maze
 	public static void fireGenerator(int size) {
-		int i = (int)(Math.random() * size);
-		int j = (int)(Math.random() * size);
-		while(mazeArr[i][j].id.equals("S") || mazeArr[i][j].id.equals("G") || mazeArr[i][j].id.equals("B")) {
-			i = (int)(Math.random() * size);
-			j = (int)(Math.random() * size);
+		boolean checkEmpty = false;
+		for(int i=0; i<size; i++) {
+			for(int j=0; j<size; j++) {
+				if(mazeArr[i][j].id.equals("_")) {
+					checkEmpty = true;
+				}
+			}
 		}
-		mazeArr[i][j].id = "F";
+		if(checkEmpty) {
+			int i = (int)(Math.random() * size);
+			int j = (int)(Math.random() * size);
+			while(mazeArr[i][j].id.equals("S") || mazeArr[i][j].id.equals("G") || mazeArr[i][j].id.equals("B")) {
+				i = (int)(Math.random() * size);
+				j = (int)(Math.random() * size);
+			}
+			mazeArr[i][j].id = "F";
+		}
 	}
-
-
 	
 	//method to advance fire
 	public static void advanceFire(double q) {
@@ -1105,14 +1113,6 @@ public class MazeFire{
 		updateProb(trial8);
 		updateProb(trial9);
 		updateProb(trial10);
-		
-
-		for(int i=0; i<size; i++){
-			for(int j=0; j<size; j++){
-				System.out.print(mazeArr[i][j].prob + " ");
-			}
-			System.out.println();
-		}
 		//run priority queue bfs with probability as comparator
 		strategy3(startPosition, goalPosition, size, q);
 		
