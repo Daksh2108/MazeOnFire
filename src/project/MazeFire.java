@@ -1201,7 +1201,7 @@ public class MazeFire{
 			currentStateRow = Integer.parseInt(currentToken[0]);
 			currentStateCol = Integer.parseInt(currentToken[1].substring(0,currentToken[1].indexOf("|")));
 
-			if (currentState.equals(goalPosition)) {
+			if (mazeArr[currentStateRow][currentStateCol].id.equals("G")) {
 				//strategy1Supplement(goalRow, goalCol, q);
 				Node ptr = mazeArr[goalRow][goalCol];
 				while (ptr != null) {
