@@ -74,7 +74,7 @@ public class MazeFire{
 		
 		
 //		mazeArr[0][0].id="S";
-//      mazeArr[0][1].id="_";
+//		mazeArr[0][1].id="_";
 // 		mazeArr[0][2].id="B";
 //		mazeArr[0][3].id="_";
 //		mazeArr[0][4].id="B";
@@ -109,7 +109,7 @@ public class MazeFire{
 //		mazeArr[3][0].id="B";
 //		mazeArr[3][1].id="_";
 //		mazeArr[3][2].id="_";
-//		mazeArr[3][3].id="_";
+//		mazeArr[3][3].id="F";
 //		mazeArr[3][4].id="B";
 //		mazeArr[3][5].id="_";
 //		mazeArr[3][6].id="_";
@@ -186,11 +186,10 @@ public class MazeFire{
 		
 
 		while (true) {
-			clearFire(size);
+			//clearFire(size);
 			System.out.println("Enter 1 for Problem 1");
 			System.out.println("Enter 2 for Problem 2");
 			System.out.println("Enter 3 for Problem 3");
-			System.out.println("Enter 4 for Problem 4");
 			System.out.println("Enter 5 for Strategy 1 in fire maze");
 			System.out.println("Enter 6 for Strategy 2 in fire maze");
 			System.out.println("Enter 7 for Strategy 3 in fire maze");
@@ -218,8 +217,6 @@ public class MazeFire{
 				if(checkAlgo.equals("2")){
 					problem3A(startPosition,goalPosition, size);
 				}
-				break;
-			case 4:
 				break;
 			case 5:
 				System.out.println("Enter a q value for the fire");
@@ -319,7 +316,7 @@ public class MazeFire{
 		if(checkEmpty) {
 			int i = (int)(Math.random() * size);
 			int j = (int)(Math.random() * size);
-			while(mazeArr[i][j].id.equals("S") || mazeArr[i][j].id.equals("G") || mazeArr[i][j].id.equals("B")) {
+			while(mazeArr[i][j].id.equals("B")) {
 				i = (int)(Math.random() * size);
 				j = (int)(Math.random() * size);
 			}
@@ -338,7 +335,7 @@ public class MazeFire{
 		}
 		for(int i=0; i<mazeArr.length; i++) {
 			for(int j=0; j<mazeArr.length; j++) {
-				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].id.equals("B") && !mazeArr[i][j].id.equals("S") && !mazeArr[i][j].id.equals("G")) {
+				if(!mazeArr[i][j].id.equals("F") && !mazeArr[i][j].id.equals("B")) {
 					//check how many neighbors are on fire
 					int k = neighborFireCheck(i,j,mazeArr.length);
 					double prob = 1 - (Math.pow(1-q, k));
@@ -393,6 +390,8 @@ public class MazeFire{
 				}
 			}
 		}
+		mazeArr[0][0].id = "S";
+		mazeArr[size-1][size-1].id = "G";
 	}
 	
 	// method to print the maze
@@ -774,6 +773,20 @@ public class MazeFire{
 
 		fringeStrategyOne.add(startPosition);
 		ArrayList<String> closedSet = new ArrayList<>();
+		
+		//check to see if initial position is on fire
+		if(mazeArr[0][0].id.equals("F")) {
+			System.out.println("Agent is on fire in the beginning");
+			System.out.println();
+			return;
+		}
+		
+		//check to see if goal position is on fire
+		if(mazeArr[goalRow][goalCol].id.equals("F")) {
+			System.out.println("Goal position is on fire");
+			System.out.println();
+			return;
+		}
 
 		while (!fringeStrategyOne.isEmpty()) {
 			String currentState = fringeStrategyOne.remove();
@@ -824,7 +837,7 @@ public class MazeFire{
 			ptr = ptr.prev;
 		}
 		Collections.reverse(arr);
-	
+		
 		//loop through path one step at a time and at every step increase fire
 		int currentRow = 0;
 		int currentCol = 0;
@@ -836,6 +849,11 @@ public class MazeFire{
 			advanceFire(q);
 			printMaze(mazeArr.length);
 			System.out.println();
+			//check to see if goal position is on fire
+			if(mazeArr[goalRow][goalCol].id.equals("F")) {
+				System.out.println("Goal position is on fire");
+				return;
+			}
 			//check to see if agent's cell caught on fire
 			if(mazeArr[currentRow][currentCol].id.equals("F")){
 				System.out.println("Agent caught on fire");
@@ -868,6 +886,22 @@ public class MazeFire{
 		int goalCol = Integer.parseInt(endToken[1]);
 
 		ArrayList<String> path = new ArrayList<>();
+		
+		
+		//check to see if initial position is on fire
+		if(mazeArr[0][0].id.equals("F")) {
+			System.out.println("Agent is on fire in the beginning");
+			System.out.println();
+			return;
+		}
+		
+		//check to see if goal position is on fire
+		if(mazeArr[goalRow][goalCol].id.equals("F")) {
+			System.out.println("Goal position is on fire");
+			System.out.println();
+			return;
+		}
+		
 		//run a while loop until starting position reaches the goal or gets trapped
 		while(!mazeArr[startRow][startCol].id.equals("G")){
 			//check if agent is at goal
@@ -887,6 +921,11 @@ public class MazeFire{
 			startCol = Integer.parseInt(nextToken[1]);
 			//generate fire
 			advanceFire(q);
+			//check to see if goal position is on fire
+			if(mazeArr[goalRow][goalCol].id.equals("F")) {
+				System.out.println("Goal position is on fire");
+				return;
+			}
 			//check to see if agent's cell caught on fire
 			if(mazeArr[startRow][startCol].id.equals("F")){
 				System.out.println("Step taken: " + "(" + startPosition + ")");
@@ -1137,6 +1176,22 @@ public class MazeFire{
 		int goalCol = Integer.parseInt(endToken[1]);
 
 		ArrayList<String> path = new ArrayList<>();
+		
+		//check to see if initial position is on fire
+		if(mazeArr[0][0].id.equals("F")) {
+			System.out.println("Agent is on fire in the beginning");
+			System.out.println();
+			return;
+		}
+		
+		//check to see if goal position is on fire
+		if(mazeArr[goalRow][goalCol].id.equals("F")) {
+			System.out.println("Goal position is on fire");
+			System.out.println();
+			return;
+		}
+		
+		
 		//run a while loop until starting position reaches the goal or gets trapped
 		while(!mazeArr[startRow][startCol].id.equals("G")){
 			//check if agent is at goal
@@ -1156,6 +1211,12 @@ public class MazeFire{
 			startCol = Integer.parseInt(nextToken[1]);
 			//generate fire
 			advanceFire(q);
+			//check to see if goal position is on fire
+			if(mazeArr[goalRow][goalCol].id.equals("F")) {
+				System.out.println("Goal position is on fire");
+				System.out.println();
+				return;
+			}
 			//check to see if agent's cell caught on fire
 			if(mazeArr[startRow][startCol].id.equals("F")){
 				System.out.println("Step taken: " + "(" + startPosition + ")");
@@ -1260,6 +1321,7 @@ public class MazeFire{
 		int goalCol = Integer.parseInt(endToken[1]);
 
 		ArrayList<String> path = new ArrayList<>();
+		
 		//run a while loop until starting position reaches the goal or gets trapped
 		while(!trial[startRow][startCol].id.equals("G")){
 			//check if agent is at goal
