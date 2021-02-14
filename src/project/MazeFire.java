@@ -25,6 +25,7 @@ public class MazeFire{
 	public static Queue<String> fringeStrategyOne = new LinkedList<>();
 	public static Queue<String> fringeStrategyTwo = new LinkedList<>();
 	public static Queue<String> fringeStrategyThree = new LinkedList<>();
+	public static ArrayList<String> closedSet3 = new ArrayList<>();
 	public static PriorityQueue<String> fringeA = new PriorityQueue<>(new Comparator<String>(){
 		public int compare(String s1, String s2){
 			String distance1 = s1.substring(s1.indexOf("|")+1);
@@ -1153,6 +1154,12 @@ public class MazeFire{
 		updateProb(trial9);
 		updateProb(trial10);
 		//run priority queue bfs with probability as comparator
+		for(int i=0; i<mazeArr.length; i++) {
+			for(int j=0; j<mazeArr.length; j++) {
+				System.out.print(mazeArr[i][j].prob + " ");
+			}
+			System.out.println();
+		}
 		strategy3(startPosition, goalPosition, size, q);
 		
 	}
@@ -1165,6 +1172,7 @@ public class MazeFire{
 				}
 			}
 		}
+		
 	}
 	public static void strategy3(String startPosition, String goalPosition, int size, double q){
 		String startToken[] = startPosition.split(",");
@@ -1214,6 +1222,7 @@ public class MazeFire{
 			//check to see if goal position is on fire
 			if(mazeArr[goalRow][goalCol].id.equals("F")) {
 				System.out.println("Goal position is on fire");
+				printMaze(size);
 				System.out.println();
 				return;
 			}
@@ -1227,6 +1236,7 @@ public class MazeFire{
 			}
 			//print step they took and maze
 			System.out.println("Step taken: " + "(" + startPosition + ")");
+			closedSet3.add(startPosition);
 	        printMaze(size);
 	        System.out.println();
 		}
@@ -1253,8 +1263,9 @@ public class MazeFire{
 		
 		probabilityFringe.clear();
 		probabilityFringe.add(startPosition + "|" + mazeArr[startRow][startCol].prob);
-		ArrayList<String> closedSet = new ArrayList<>();
+		//ArrayList<String> closedSet = new ArrayList<>();
 		ArrayList<String> arr = new ArrayList<>();
+		ArrayList<String> closedSet = new ArrayList<>();
 
 		while (!probabilityFringe.isEmpty()) {
 			String currentState = probabilityFringe.remove();
@@ -1300,7 +1311,7 @@ public class MazeFire{
 				}else{
 					col = Integer.parseInt(token[1].substring(0,token[1].indexOf("|")));
 				}
-				if (!mazeArr[row][col].id.equals("B") && !mazeArr[row][col].id.equals("F") && !closedSet.contains(getChildIndex + "|" + mazeArr[row][col].prob)) {
+				if (!mazeArr[row][col].id.equals("B") && !mazeArr[row][col].id.equals("F") && !closedSet.contains(getChildIndex + "|" + mazeArr[row][col].prob) && !closedSet3.contains(getChildIndex)) {
 					probabilityFringe.add(row + "," + col + "|" + mazeArr[row][col].prob);
 					mazeArr[row][col].prev = mazeArr[currentStateRow][currentStateCol];
 				}
