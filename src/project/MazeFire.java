@@ -1052,12 +1052,6 @@ public class MazeFire{
 		updateProb(trial9);
 		updateProb(trial10);
 		//run priority queue bfs with probability as comparator
-		for(int i=0; i<mazeArr.length; i++) {
-			for(int j=0; j<mazeArr.length; j++) {
-				System.out.print(mazeArr[i][j].prob + " ");
-			}
-			System.out.println();
-		}
 		strategy3(startPosition, goalPosition, size, q);
 		
 	}
