@@ -19,13 +19,19 @@ public class MazeFire{
 	// maze
 	public static Node mazeArr[][];
 
-	// Stack for keeping track of shortest path
+	// Stack for keeping of fringe for DFS
 	public static Stack<String> fringe = new Stack<>();
+	//queue used for fringe for BFS
 	public static Queue<String> fringeBFS = new LinkedList<>();
+	//queue used for fringe for Strategy 1
 	public static Queue<String> fringeStrategyOne = new LinkedList<>();
+	//queue used for fringe for Strategy 2
 	public static Queue<String> fringeStrategyTwo = new LinkedList<>();
+	//queue used for fringe for Strategy 2
 	public static Queue<String> fringeStrategyThree = new LinkedList<>();
+	//global closed set for strategy 3
 	public static ArrayList<String> closedSet3 = new ArrayList<>();
+	//priority queue used for fringe for A*
 	public static PriorityQueue<String> fringeA = new PriorityQueue<>(new Comparator<String>(){
 		public int compare(String s1, String s2){
 			String distance1 = s1.substring(s1.indexOf("|")+1);
@@ -41,6 +47,7 @@ public class MazeFire{
 			return 0;
 		}
 	});
+	//priority queue used for fringe for Strategy 3
 	public static PriorityQueue<String> probabilityFringe = new PriorityQueue<>(new Comparator<String>(){
 		@Override
 		public int compare(String s1, String s2) {
@@ -73,121 +80,7 @@ public class MazeFire{
 		updateMazeGenerator(size);
 		printMaze(size);
 		
-		
-//		mazeArr[0][0].id="S";
-//		mazeArr[0][1].id="_";
-// 		mazeArr[0][2].id="B";
-//		mazeArr[0][3].id="_";
-//		mazeArr[0][4].id="B";
-//      mazeArr[0][5].id="B";
-// 		mazeArr[0][6].id="_";
-//		mazeArr[0][7].id="_";
-//		mazeArr[0][8].id="B";
-//		mazeArr[0][9].id="_";
-//		 
-// 		mazeArr[1][0].id="B";
-//		mazeArr[1][1].id="_";
-//		mazeArr[1][2].id="_";
-//		mazeArr[1][3].id="B";
-//		mazeArr[1][4].id="_";
-//		mazeArr[1][5].id="B";
-//		mazeArr[1][6].id="_";
-//		mazeArr[1][7].id="_";
-//		mazeArr[1][8].id="_";
-//		mazeArr[1][9].id="_";
-//
-//		mazeArr[2][0].id="B";
-//		mazeArr[2][1].id="B";
-//		mazeArr[2][2].id="B";
-//		mazeArr[2][3].id="_";
-//		mazeArr[2][4].id="B";
-//		mazeArr[2][5].id="_";
-//		mazeArr[2][6].id="_";
-//		mazeArr[2][7].id="_";
-//		mazeArr[2][8].id="_";
-//		mazeArr[2][9].id="B";
-//
-//		mazeArr[3][0].id="B";
-//		mazeArr[3][1].id="_";
-//		mazeArr[3][2].id="_";
-//		mazeArr[3][3].id="F";
-//		mazeArr[3][4].id="B";
-//		mazeArr[3][5].id="_";
-//		mazeArr[3][6].id="_";
-//		mazeArr[3][7].id="_";
-//		mazeArr[3][8].id="B";
-//		mazeArr[3][9].id="_";
-//
-//
-//		mazeArr[4][0].id="B";
-//		mazeArr[4][1].id="_";
-//		mazeArr[4][2].id="B";
-//		mazeArr[4][3].id="_";
-//		mazeArr[4][4].id="G";
-//		mazeArr[4][5].id="_";
-//		mazeArr[4][6].id="B";
-//		mazeArr[4][7].id="_";
-//		mazeArr[4][8].id="_";
-//		mazeArr[4][9].id="_";
-//		
-//		mazeArr[5][0].id="B";
-//      mazeArr[5][1].id="_";
-// 		mazeArr[5][2].id="B";
-//		mazeArr[5][3].id="_";
-//		mazeArr[5][4].id="B";
-//      mazeArr[5][5].id="B";
-// 		mazeArr[5][6].id="B";
-//		mazeArr[5][7].id="_";
-//		mazeArr[5][8].id="B";
-//		mazeArr[5][9].id="_";
-//
-//		mazeArr[6][0].id="_";
-//      mazeArr[6][1].id="_";
-// 		mazeArr[6][2].id="_";
-//		mazeArr[6][3].id="_";
-//		mazeArr[6][4].id="B";
-//      mazeArr[6][5].id="B";
-// 		mazeArr[6][6].id="_";
-//		mazeArr[6][7].id="B";
-//		mazeArr[6][8].id="_";
-//		mazeArr[6][9].id="B";
-//
-//		mazeArr[7][0].id="B";
-//      mazeArr[7][1].id="_";
-// 		mazeArr[7][2].id="_";
-//		mazeArr[7][3].id="B";
-//		mazeArr[7][4].id="B";
-//      mazeArr[7][5].id="_";
-// 		mazeArr[7][6].id="B";
-//		mazeArr[7][7].id="_";
-//		mazeArr[7][8].id="B";
-//		mazeArr[7][9].id="_";
-//
-//		mazeArr[8][0].id="_";
-//      mazeArr[8][1].id="_";
-// 		mazeArr[8][2].id="_";
-//		mazeArr[8][3].id="_";
-//		mazeArr[8][4].id="_";
-//      mazeArr[8][5].id="_";
-// 		mazeArr[8][6].id="_";
-//		mazeArr[8][7].id="_";
-//		mazeArr[8][8].id="_";
-//		mazeArr[8][9].id="_";
-//
-//		mazeArr[9][0].id="_";
-//      mazeArr[9][1].id="B";
-// 		mazeArr[9][2].id="_";
-//		mazeArr[9][3].id="_";
-//		mazeArr[9][4].id="B";
-//      mazeArr[9][5].id="B";
-// 		mazeArr[9][6].id="_";
-//		mazeArr[9][7].id="_";
-//		mazeArr[9][8].id="_";
-//		mazeArr[9][9].id="G";
-		
-
 		while (true) {
-			//clearFire(size);
 			System.out.println("Enter 1 for Problem 1");
 			System.out.println("Enter 2 for Problem 2");
 			System.out.println("Enter 3 for Problem 3");
@@ -578,7 +471,6 @@ public class MazeFire{
 	}
 
 	// method to print the path
-	
 	public static void printPath(Node goal) {
 		ArrayList<String> arr = new ArrayList<>();
 		Node ptr = goal;
@@ -592,7 +484,7 @@ public class MazeFire{
 		}
 	}
 
-	// method to solve problem 3
+	// method to solve problem 3 BFS
 	public static void problem3BFS(String startPosition, String goalPosition, int size) {
 		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
@@ -649,6 +541,7 @@ public class MazeFire{
 		System.out.println("Path does not exist");
 		//return;
 	}
+	//method to run problem 3 A*
 	public static void problem3A(String startPositionA, String goalPositionA,int size){
 		ArrayList<String> closedSet = new ArrayList<>();
 		String startToken[] = startPositionA.split(",");
@@ -669,7 +562,6 @@ public class MazeFire{
 		
 		mazeArr[startRow][startCol].distance = 0;
 		fringeA.add(startPositionA + "|" + mazeArr[startRow][startCol].distance);
-		//removed prev[root] = root
 		int currentRow=0;
 		int currentCol=0;
 		while(!fringeA.isEmpty()){
@@ -741,7 +633,8 @@ public class MazeFire{
 		printPath(mazeArr[goalRow][goalCol]);
 		
 	}
-
+	
+	//method to find the euclidean distance between a spot and the goal
 	public static double euclidean(String currentState, String goalState){
 		String startToken[] = currentState.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
@@ -759,6 +652,7 @@ public class MazeFire{
 		return Math.sqrt(((goalCol-startCol)*(goalCol-startCol)) + ((goalRow-startRow)*(goalRow-startRow)));
 	}
 	
+	//method to perform strategy 1 (BFS)
 	public static void strategy1(String startPosition, String goalPosition,int size, double q) {
 		//compute the shortest path and follow it until agent is trapped and burns or makes his way out
 		String startToken[] = startPosition.split(",");
@@ -828,7 +722,8 @@ public class MazeFire{
 		printPath(mazeArr[currentStateRow][currentStateCol]);
 		System.out.println("Path does not exist");
 	}
-
+	
+	//method that moves agent along and checks if goal is reached or not
 	public static void strategy1Supplement(int goalRow, int goalCol, double q){
 		//construct the path
 		ArrayList<String> arr = new ArrayList<>();
@@ -877,6 +772,7 @@ public class MazeFire{
 		printPath(mazeArr[goalRow][goalCol]);
 	}
 
+	//method used to move agent every step and report current status
 	public static void strategy2(String startPosition, String goalPosition, int size, double q){
 		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
@@ -943,6 +839,7 @@ public class MazeFire{
 		System.out.println("Agent successfully made it to goal");
 	}
 
+	//method used to do BFS for strategy 2
 	public static ArrayList<String> strategy2BFS(String startPosition, String goalPosition, int size, double q){
 		//resetting the prev pointers to null
 		for(int i=0; i<size; i++) {
@@ -1010,7 +907,8 @@ public class MazeFire{
 		}
 		return arr;
 	}
-
+	
+	//method used to set the probability a cell will catch on fire in the maze
 	public static void probabilityRunner(String startPosition, String goalPosition, int size, double q){
 		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
@@ -1163,7 +1061,7 @@ public class MazeFire{
 		strategy3(startPosition, goalPosition, size, q);
 		
 	}
-
+	//method to update prob field
 	public static void updateProb(Node[][] trial){
 		for(int i=0; i<trial.length; i++){
 			for(int j=0; j<trial.length; j++){
@@ -1174,6 +1072,7 @@ public class MazeFire{
 		}
 		
 	}
+	//method to move agent every step and report status
 	public static void strategy3(String startPosition, String goalPosition, int size, double q){
 		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
@@ -1242,7 +1141,8 @@ public class MazeFire{
 		}
 		System.out.println("Agent successfully made it to goal");
 	}
-
+	
+	//method used to run modified A* on maze
 	public static ArrayList<String> strategy3BFS(String startPosition, String goalPosition, int size, double q){
 		//resetting the prev pointers to null
 		for(int i=0; i<size; i++) {
@@ -1322,6 +1222,7 @@ public class MazeFire{
 	}
 
 	//****************************************Future Predicton Of Fire*************************************************************************/
+	//method used to move agent every step in trial maze
 	public static Node[][] strategy3Trial(Node trial[][], String startPosition, String goalPosition, int size, double q){
 		String startToken[] = startPosition.split(",");
 		int startRow = Integer.parseInt(startToken[0]);
@@ -1354,21 +1255,12 @@ public class MazeFire{
 			advanceFireTrial(trial, q);
 			//check to see if agent's cell caught on fire
 			if(trial[startRow][startCol].id.equals("F")){
-				//System.out.println("Step taken: " + "(" + startPosition + ")");
-				//printMazeTrial(trial,size);
-				//System.out.println();
-				//System.out.println("Agent caught on fire");
 				return trial;
 			}
-			//print step they took and maze
-			//System.out.println("Step taken: " + "(" + startPosition + ")");
-	        //printMazeTrial(trial,size);
-	        //System.out.println();
 		}
-		//System.out.println("Agent successfully made it to goal");
-
 		return trial;
 	}
+	//method used to run BFS on the trial mazes
 	public static ArrayList<String> strategy3TrialBFS(Node trial[][],String startPosition, String goalPosition, int size, double q){
 			//resetting the prev pointers to null
 			for(int i=0; i<size; i++) {
@@ -1437,7 +1329,7 @@ public class MazeFire{
 			return arr;
 	}
 		
-	//method to advance fire
+	//method to advance fire on trial mazes
 	public static void advanceFireTrial(Node trial[][], double q) {
 		Node[][] copy = new Node[trial.length][trial.length];
 		for(int i=0; i<trial.length; i++) {
@@ -1493,23 +1385,5 @@ public class MazeFire{
 		}
 		return count;
 	}
-
-//	 method to print the maze Trial
-//	 public static void printMazeTrial(Node trial[][],int size) {
-//	 	int count1 = 0, count2 = 0;
-//	 	for (int i = 0; i < size; i++) {
-//	 		System.out.print(count1 + " ");
-//	 		count1++;
-//	 	}
-//	 	System.out.println();
-//	 	for (int i = 0; i < size; i++) {
-//	 		for (int j = 0; j < size; j++) {
-//	 			System.out.print(trial[i][j].id + " ");
-//	 		}
-//	 		System.out.print(count2);
-//	 		count2++;
-//	 		System.out.println();
-//	 	}
-//	 }
 	
 }
